@@ -4,7 +4,3 @@
 	branch = 6.1.2-lv2
 	ignore = dirty
 
-[submodule "lib/react-juce"]
-	path = lib/react-juce
-	url = https://github.com/nick-thompson/react-juce
-	ignore = dirty

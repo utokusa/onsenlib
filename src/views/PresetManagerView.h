@@ -35,7 +35,7 @@ Prev, Next, Revert are normal buttons.
 namespace onsen
 {
 //==============================================================================
-class PresetManagerView : public reactjuce::View, public juce::Button::Listener
+class PresetManagerView : public juce::Component, public juce::Button::Listener
 {
     struct JuceFileHash
     {

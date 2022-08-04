@@ -107,15 +107,6 @@ jobs:
         key: ${{ matrix.config.name }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
         restore-keys: |
           ${{ matrix.config.name }}-ccache-
-    - name: Install Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-    - name: Build UI
-      working-directory: ./src/jsui
-      run: |
-        npm install
-        npm run build
     
     - name: Configure
       shell: cmake -P {0}

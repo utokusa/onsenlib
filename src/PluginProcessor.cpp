@@ -7,7 +7,6 @@
 */
 
 #include "PluginProcessor.h"
-#include "PluginEditor.h"
 #include "adapters/JuceAudioBuffer.h"
 #include "services/TmpFileManager.h"
 
@@ -246,7 +245,7 @@ juce::AudioProcessorEditor* OnsenlibSynthAudioProcessor::createEditor()
 {
     // Look and feel
     juce::LookAndFeel::setDefaultLookAndFeel (&laf);
-    return new OnsenlibSynthAudioProcessorEditor (*this, parameters, presetManager, &synthUi);
+    return new juce::GenericAudioProcessorEditor (*this);
 }
 
 //==============================================================================

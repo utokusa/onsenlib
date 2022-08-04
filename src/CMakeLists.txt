@@ -66,7 +66,6 @@ target_compile_definitions(OnsenlibSynth
         )
 
 set(BINARY_SOURCES
-    ${CMAKE_SOURCE_DIR}/src/jsui/build/js/main.js
     ${CMAKE_SOURCE_DIR}/assets/Recursive-Regular.ttf
 
     ${CMAKE_SOURCE_DIR}/assets/images/left.png
@@ -113,7 +112,6 @@ juce_add_binary_data(OnsenlibSynthBinaries
 
 target_sources(OnsenlibSynth PRIVATE
         PluginProcessor.cpp
-        PluginEditor.cpp
         dsp/Chorus.cpp
         dsp/Envelope.cpp
         synth/SynthEngine.cpp
@@ -122,11 +120,6 @@ target_sources(OnsenlibSynth PRIVATE
         views/PresetManagerView.cpp
         views/ClippingIndicatorView.cpp
         )
-
-# Add an explicit include path here so that react-juce's EcmascriptEngine can find
-# the included Duktape source. You can optionally point this elsewhere if you'd like to
-# include a custom Duktape build.
-target_include_directories(OnsenlibSynth PRIVATE react_juce/)
 
 target_link_libraries(OnsenlibSynth PUBLIC
         OnsenlibSynthBinaries
@@ -143,7 +136,6 @@ target_link_libraries(OnsenlibSynth PUBLIC
         juce::juce_graphics
         juce::juce_gui_basics
         juce::juce_gui_extra
-        react_juce
         )
 
 # Avoid link error on linux + gcc
