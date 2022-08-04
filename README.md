@@ -1,2 +1,4 @@
 # onsenlib
-Library for onsen audio applications
+Library for [Onsen Audio](https://onsenaudio.com/) applications
+
+This library is under development
