@@ -9,10 +9,10 @@ GENERATOR_OPTION?=-G "Ninja"
 
 ifeq ($(OS), Windows_NT)
 	# Windows
-	STANDALONE_BIN_PATH=.\${BUILD_DIR}\src\Os251_artefacts\${CONFIG}\Standalone\OS-251.exe
-	TESTS_BIN_PATH:=.\${BUILD_DIR}\tests\${CONFIG}\Os251_Tests.exe
-	TESTS_USING_JUCE_BIN_PATH:=.\${BUILD_DIR}\tests/Os251_TestsUsingJuce_artefacts\${CONFIG}\Os251_TestsUsingJuce.exe
-	BENCHMARK_BIN_PATH:=.\${BUILD_DIR}\benchmark\Os251_Benchmark_artefacts\${CONFIG}\Os251_Benchmark.exe
+	STANDALONE_BIN_PATH=.\${BUILD_DIR}\src\OnsenlibSynth_artefacts\${CONFIG}\Standalone\OnsenlibSynth.exe
+	TESTS_BIN_PATH:=.\${BUILD_DIR}\tests\${CONFIG}\OnsenlibSynth_Tests.exe
+	TESTS_USING_JUCE_BIN_PATH:=.\${BUILD_DIR}\tests/OnsenlibSynth_TestsUsingJuce_artefacts\${CONFIG}\OnsenlibSynth_TestsUsingJuce.exe
+	BENCHMARK_BIN_PATH:=.\${BUILD_DIR}\benchmark\OnsenlibSynth_Benchmark_artefacts\${CONFIG}\OnsenlibSynth_Benchmark.exe
 	RM_COMMAND=rmdir /s /q ${BUILD_DIR}
 	# Use default just because I don't know how to use Ninja in Windows 
 	GENERATOR_OPTION=
@@ -20,16 +20,16 @@ else
 	UNAME_S:=$(shell uname -s)
 	ifeq ($(UNAME_S), Darwin)
 		# macOs
-		STANDALONE_BIN_PATH=./$(BUILD_DIR)/src/Os251_artefacts/$(CONFIG)/Standalone/OS-251.app/Contents/MacOS/OS-251
+		STANDALONE_BIN_PATH=./$(BUILD_DIR)/src/OnsenlibSynth_artefacts/$(CONFIG)/Standalone/OnsenlibSynth.app/Contents/MacOS/OnsenlibSynth
 
 	else
 		# Linux
-		STANDALONE_BIN_PATH:=./$(BUILD_DIR)/src/Os251_artefacts/$(CONFIG)/Standalone/OS-251
+		STANDALONE_BIN_PATH:=./$(BUILD_DIR)/src/OnsenlibSynth_artefacts/$(CONFIG)/Standalone/OnsenlibSynth
 
 	endif
-	TESTS_BIN_PATH:=./${BUILD_DIR}/tests/Os251_Tests
-	TESTS_USING_JUCE_BIN_PATH:=./${BUILD_DIR}/tests/Os251_TestsUsingJuce_artefacts/${CONFIG}/Os251_TestsUsingJuce
-	BENCHMARK_BIN_PATH:=./${BUILD_DIR}/benchmark/Os251_Benchmark_artefacts/${CONFIG}/Os251_Benchmark
+	TESTS_BIN_PATH:=./${BUILD_DIR}/tests/OnsenlibSynth_Tests
+	TESTS_USING_JUCE_BIN_PATH:=./${BUILD_DIR}/tests/OnsenlibSynth_TestsUsingJuce_artefacts/${CONFIG}/OnsenlibSynth_TestsUsingJuce
+	BENCHMARK_BIN_PATH:=./${BUILD_DIR}/benchmark/OnsenlibSynth_Benchmark_artefacts/${CONFIG}/OnsenlibSynth_Benchmark
 	RM_COMMAND=rm -rf ${BUILD_DIR}
 endif
 
@@ -42,11 +42,11 @@ configure:
 	cmake . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=$(CONFIG) ${GENERATOR_OPTION}
 
 build-all:
-	cmake --build $(BUILD_DIR) --config $(CONFIG) --target Os251_All
+	cmake --build $(BUILD_DIR) --config $(CONFIG) --target OnsenlibSynth_All
 
 # Build standalone
 build-s:
-	cmake --build $(BUILD_DIR) --config $(CONFIG) --target Os251_Standalone
+	cmake --build $(BUILD_DIR) --config $(CONFIG) --target OnsenlibSynth_Standalone
 
 # Run standalone
 .PHONY: run-s
@@ -63,14 +63,14 @@ lldb-s: build-s
 #
 
 build-test:
-	cmake --build $(BUILD_DIR) --config $(CONFIG) --target Os251_Tests
+	cmake --build $(BUILD_DIR) --config $(CONFIG) --target OnsenlibSynth_Tests
 
 .PHONY: test
 test: build-test
 	${TESTS_BIN_PATH}
 
 build-test-juce:
-	cmake --build $(BUILD_DIR) --config $(CONFIG) --target Os251_TestsUsingJuce
+	cmake --build $(BUILD_DIR) --config $(CONFIG) --target OnsenlibSynth_TestsUsingJuce
 
 .PHONY: test-juce
 test-juce: build-test-juce
@@ -86,7 +86,7 @@ test-all: test test-juce
 #
 
 build-benchmark:
-	cmake --build $(BUILD_DIR) --config $(CONFIG) --target Os251_Benchmark
+	cmake --build $(BUILD_DIR) --config $(CONFIG) --target OnsenlibSynth_Benchmark
 
 .PHONY: benchmark
 benchmark: build-benchmark

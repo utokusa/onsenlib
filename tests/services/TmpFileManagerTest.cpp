@@ -36,17 +36,17 @@ TEST_F (TmpFileManagerTest, GetTmpFileDir)
     // This test is not to miss the change of the specification on juce::File::getSpecialLocation()
 
     // juce::File::getSpecialLocation (juce::File::tempDirectory) returns:
-    // - ~/Library/Caches/OS-251 for macOS
+    // - ~/Library/Caches/OnsenlibSynth for macOS
     // - C:¥Users¥<UserName>¥AppData¥Local¥Temp for windows
     // - /tmp for Linux
 #if JUCE_MAC
-    EXPECT_EQ (TmpFileManager::getTmpDir(), juce::File ("~/Library/Caches/Onsen Audio/OS-251"));
+    EXPECT_EQ (TmpFileManager::getTmpDir(), juce::File ("~/Library/Caches/Onsen Audio/OnsenlibSynth"));
 #elif JUCE_WINDOWS
     // TODO: Maybe we can improve the test
     EXPECT_EQ (TmpFileManager::getTmpDir(),
-               juce::File::getSpecialLocation (juce::File::tempDirectory).getChildFile ("Onsen Audio/OS-251"));
+               juce::File::getSpecialLocation (juce::File::tempDirectory).getChildFile ("Onsen Audio/OnsenlibSynth"));
 #elif JUCE_LINUX
-    EXPECT_EQ (TmpFileManager::getTmpDir(), juce::File ("/tmp/Onsen Audio/OS-251"));
+    EXPECT_EQ (TmpFileManager::getTmpDir(), juce::File ("/tmp/Onsen Audio/OnsenlibSynth"));
 #endif
 }
 

@@ -52,8 +52,8 @@ public:
                           // For Windows we use edited version of Recursive-Regular.ttf
                           typeface (
                               juce::Typeface::createSystemTypefaceFor (
-                                  BinaryData::Os251Font125Percent_ttf,
-                                  BinaryData::Os251Font125Percent_ttfSize))
+                                  BinaryData::OnsenlibSynthFont125Percent_ttf,
+                                  BinaryData::OnsenlibSynthFont125Percent_ttfSize))
 #else
                           // Recursive-Regular.ttf
                           typeface (

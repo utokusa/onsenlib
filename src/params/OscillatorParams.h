@@ -130,7 +130,7 @@ public:
     // For parameters that are not read directly by the synth engine (numVoices and unisonOn)
     static inline BasicParamMetaInfo numVoicesParamBasicMetaInfo()
     {
-        constexpr float defaultFlnumNumVoices = 0.285; // The number will be converted to 8. OS-251 has 8 voices as default.
+        constexpr float defaultFlnumNumVoices = 0.285; // The number will be converted to 8. OnsenlibSynth has 8 voices as default.
         return { "numVoices", "Num Voices", defaultFlnumNumVoices, [] (float value) {
                     return std::to_string (DspUtil::mapFlnumToInt (value, 0.0, 1.0, 1, OscillatorConfig::MAX_NUM_VOICES));
                 } };

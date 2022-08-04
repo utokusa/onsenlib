@@ -93,11 +93,11 @@ void PresetManager::savePreset (juce::File file)
     auto presetXml = std::make_unique<juce::XmlElement> ("Preset");
 
     auto gadget = new juce::XmlElement ("Gadget");
-    gadget->addTextElement ("OS-251");
+    gadget->addTextElement ("OnsenlibSynth");
     presetXml->addChildElement (gadget);
 
     auto savedByVersion = new juce::XmlElement ("SavedByVersion");
-    savedByVersion->addTextElement (OS_251_PROJECT_VERSION);
+    savedByVersion->addTextElement (ONSENLIB_SYNTH_PROJECT_VERSION);
     presetXml->addChildElement (savedByVersion);
 
     auto version = new juce::XmlElement ("Version");
@@ -181,7 +181,7 @@ bool PresetManager::validatePresetXml (juce::XmlElement const* const presetXml)
         && presetXml->getChildByName ("Gadget") != nullptr
         && presetXml->getChildByName ("Gadget")->getFirstChildElement() != nullptr
         && presetXml->getChildByName ("Gadget")->getFirstChildElement()->isTextElement()
-        && presetXml->getChildByName ("Gadget")->getFirstChildElement()->getText() == "OS-251"
+        && presetXml->getChildByName ("Gadget")->getFirstChildElement()->getText() == "OnsenlibSynth"
         && presetXml->getChildByName ("SavedByVersion") != nullptr
         && presetXml->getChildByName ("SavedByVersion")->getFirstChildElement() != nullptr
         && presetXml->getChildByName ("SavedByVersion")->getFirstChildElement()->isTextElement()
@@ -217,9 +217,9 @@ juce::ValueTree PresetManager::fixPresetState (juce::ValueTree& state)
     // the default preset state
     std::unique_ptr<juce::XmlElement> defaultPresetXml = juce::parseXML (BinaryData::Default_oapreset);
 
-    // TODO: Fix hard-coded "OS-251". It was originally provided by `processorState->getProcessorName()` in other places.
+    // TODO: Fix hard-coded "OnsenlibSynth". It was originally provided by `processorState->getProcessorName()` in other places.
     auto fixedState = juce::ValueTree::fromXml (
-        *(defaultPresetXml->getChildByName ("State")->getChildByName ("OS-251")));
+        *(defaultPresetXml->getChildByName ("State")->getChildByName ("OnsenlibSynth")));
 
     for (auto it = fixedState.begin(); it != fixedState.end(); ++it)
     {

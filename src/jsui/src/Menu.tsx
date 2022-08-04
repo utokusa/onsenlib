@@ -13,7 +13,7 @@ class Menu extends Component {
       <View {...styles.menu}>
         <View {...styles.logo}>
           <Text {...styles.logo_text}>
-            OS-251
+            OnsenlibSynth
           </Text>
           <PresetManager {...styles.preset_manager} />
         </View>

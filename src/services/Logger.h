@@ -23,10 +23,10 @@ namespace Logger
     {
 #ifdef DEBUG
         static bool init = false;
-        // std::string filePath = "log_OS-251.txt";
+        // std::string filePath = "log_OnsenlibSynth.txt";
         juce::File file = juce::File::getSpecialLocation (
                               juce::File::SpecialLocationType::userDesktopDirectory)
-                              .getChildFile ("log_OS-251.txt");
+                              .getChildFile ("log_OnsenlibSynth.txt");
         std::string filePath = file.getFullPathName().toStdString();
         if (! init)
         {

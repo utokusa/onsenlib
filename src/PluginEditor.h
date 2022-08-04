@@ -19,13 +19,13 @@
 //==============================================================================
 /**
 */
-class Os251AudioProcessorEditor : public juce::AudioProcessorEditor,
-                                  public juce::AudioProcessorParameter::Listener,
-                                  public juce::Timer
+class OnsenlibSynthAudioProcessorEditor : public juce::AudioProcessorEditor,
+                                          public juce::AudioProcessorParameter::Listener,
+                                          public juce::Timer
 {
 public:
-    Os251AudioProcessorEditor (Os251AudioProcessor&, juce::AudioProcessorValueTreeState&, onsen::PresetManager&, onsen::ISynthUi* synthUi);
-    ~Os251AudioProcessorEditor() override;
+    OnsenlibSynthAudioProcessorEditor (OnsenlibSynthAudioProcessor&, juce::AudioProcessorValueTreeState&, onsen::PresetManager&, onsen::ISynthUi* synthUi);
+    ~OnsenlibSynthAudioProcessorEditor() override;
 
     //==============================================================================
     void paint (juce::Graphics&) override;
@@ -42,7 +42,7 @@ private:
     void afterBundleEvaluated();
     //==============================================================================
 
-    Os251AudioProcessor& audioProcessor;
+    OnsenlibSynthAudioProcessor& audioProcessor;
     onsen::PresetManager& presetManager;
     onsen::ISynthUi* const synthUi;
 
@@ -60,5 +60,5 @@ private:
     static constexpr int appWidth = bodyWidth;
     static constexpr int appHeight = bodyHeight + headerHeight;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Os251AudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OnsenlibSynthAudioProcessorEditor)
 };

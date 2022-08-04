@@ -18,17 +18,17 @@ namespace TmpFileManager
     inline juce::File getTmpDir()
     {
         // juce::File::getSpecialLocation (juce::File::tempDirectory) returns:
-        // - ~/Library/Caches/OS-251 for macOS
+        // - ~/Library/Caches/OnsenlibSynth for macOS
         // - C:¥Users¥<UserName>¥AppData¥Local¥Temp for windows
         // - /tmp for Linux
 
 #if JUCE_MAC
-        // We don't want to use "~/Library/Caches/OS-251"
+        // We don't want to use "~/Library/Caches/OnsenlibSynth"
         auto systemTmpDir = juce::File { "~/Library/Caches" };
 #else
         auto systemTmpDir = juce::File::getSpecialLocation (juce::File::tempDirectory);
 #endif
-        return systemTmpDir.getChildFile ("Onsen Audio/OS-251");
+        return systemTmpDir.getChildFile ("Onsen Audio/OnsenlibSynth");
     }
 
     inline juce::File createTempFile (const juce::File& dir, juce::StringRef fileNameEnding)
@@ -55,7 +55,7 @@ namespace TmpFileManager
         // should not keep using one tmp file for more than a day.
         // So we delete files which are more than a day old.
 
-        // Currently OS-251 use the tmp folder only for the js bundle.
+        // Currently OnsenlibSynth use the tmp folder only for the js bundle.
         // The file name is something like "temp_6e09bcc5.main.js".
         auto files = tmpDir.findChildFiles (juce::File::TypesOfFileToFind::findFiles, false, "*.js");
         for (auto f : files)

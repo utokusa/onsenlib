@@ -6,7 +6,7 @@ name: Test and Release
 on: [push, pull_request]
 
 env:
-  PROJECT_NAME: Os251
+  PROJECT_NAME: OnsenlibSynth
   CMAKE_VERSION: 3.22.2
   NINJA_VERSION: 1.9.0
   BUILD_TYPE: Release
@@ -233,9 +233,9 @@ jobs:
         APPLE_DEVELOPER_ID_APPLICATION: 13A1AEE61409B53A0A1B425960E9AE3279110B8F
       run: |
         /usr/bin/codesign -s $APPLE_DEVELOPER_ID_APPLICATION -f -v --timestamp --options runtime \
-        ./build/src/Os251_artefacts/Release/Standalone/OS-251.app \
-        ./build/src/Os251_artefacts/Release/VST3/OS-251.vst3 \
-        ./build/src/Os251_artefacts/Release/AU/OS-251.component
+        ./build/src/OnsenlibSynth_artefacts/Release/Standalone/OnsenlibSynth.app \
+        ./build/src/OnsenlibSynth_artefacts/Release/VST3/OnsenlibSynth.vst3 \
+        ./build/src/OnsenlibSynth_artefacts/Release/AU/OnsenlibSynth.component
     - if: ${{ runner.os=='macOS' }}
       name: Install Packages app to create .pkg using packagesbuild command
       run: |
@@ -248,23 +248,23 @@ jobs:
       name: Create .pkg (macOS)
       run: |
         set -x
-        mkdir ./build/src/Os251_artefacts/Release/installer
-        cp ./distro/macOS/OS-251.pkgproj ./build/src/Os251_artefacts/Release/installer
-        cp ./LICENSE ./build/src/Os251_artefacts/Release/installer/license_eng.txt
-        cd ./build/src/Os251_artefacts/Release
-        mv ./VST3/OS-251.vst3 ./installer
-        mv ./AU/OS-251.component ./installer
+        mkdir ./build/src/OnsenlibSynth_artefacts/Release/installer
+        cp ./distro/macOS/OnsenlibSynth.pkgproj ./build/src/OnsenlibSynth_artefacts/Release/installer
+        cp ./LICENSE ./build/src/OnsenlibSynth_artefacts/Release/installer/license_eng.txt
+        cd ./build/src/OnsenlibSynth_artefacts/Release
+        mv ./VST3/OnsenlibSynth.vst3 ./installer
+        mv ./AU/OnsenlibSynth.component ./installer
         cd ./installer
         # Build installer
-        packagesbuild OS-251.pkgproj
+        packagesbuild OnsenlibSynth.pkgproj
     - if: ${{ runner.os=='macOS' }}
       name: Sign .pkg (macOS)
       env:
         APPLE_DEVELOPER_ID_INSTALLER: 7EE492BDFEADA885197E69D6DDE3C91A122C03F0
       run: |
-        cd ./build/src/Os251_artefacts/Release/installer/build
+        cd ./build/src/OnsenlibSynth_artefacts/Release/installer/build
         mkdir signed
-        productsign -s $APPLE_DEVELOPER_ID_INSTALLER OS-251.pkg ./signed/OS-251.pkg
+        productsign -s $APPLE_DEVELOPER_ID_INSTALLER OnsenlibSynth.pkg ./signed/OnsenlibSynth.pkg
     - if: ${{ runner.os=='macOS' }}
       name: Install gon via HomeBrew for code signing and app notarization
       run: |
@@ -283,37 +283,37 @@ jobs:
     - if: ${{ runner.os=='macOS' }}
       name: Create .dmg
       run: |
-        hdiutil create OS-251-macOS.dmg -fs HFS+ \
-        -srcfolder ./build/src/Os251_artefacts/Release/installer/build/signed \
-        -format UDZO -volname OS-251
+        hdiutil create OnsenlibSynth-macOS.dmg -fs HFS+ \
+        -srcfolder ./build/src/OnsenlibSynth_artefacts/Release/installer/build/signed \
+        -format UDZO -volname OnsenlibSynth
     - if: ${{ runner.os=='Windows' }}
       name: Create Installer (Windows)
       run: |
-        # First, put files for installer to .\build\src\Os251_artefacts\Release\installer
-        cp .\distro\Windows\OS-251.iss .\build\src\Os251_artefacts\Release
-        cd .\build\src\Os251_artefacts\Release
+        # First, put files for installer to .\build\src\OnsenlibSynth_artefacts\Release\installer
+        cp .\distro\Windows\OnsenlibSynth.iss .\build\src\OnsenlibSynth_artefacts\Release
+        cd .\build\src\OnsenlibSynth_artefacts\Release
         mkdir .\installer
-        mv .\OS-251.iss installer
-        cp .\VST3\OS-251.vst3\Contents\x86_64-win\OS-251.vst3 .\installer
+        mv .\OnsenlibSynth.iss installer
+        cp .\VST3\OnsenlibSynth.vst3\Contents\x86_64-win\OnsenlibSynth.vst3 .\installer
         cd .\installer
-        iscc OS-251.iss
+        iscc OnsenlibSynth.iss
         # Put installer in the project root
-        mv .\Output\OS-251-Windows.exe ..\..\..\..\..\
+        mv .\Output\OnsenlibSynth-Windows.exe ..\..\..\..\..\
     - if: ${{ runner.os=='Windows' }}
       name: Pack (Windows)
       run: |
-        cmake -E tar cvf ${{ github.event.repository.name }}-${{ runner.os }}.zip --format=zip -- OS-251-${{ runner.os }}.exe
+        cmake -E tar cvf ${{ github.event.repository.name }}-${{ runner.os }}.zip --format=zip -- ${Env:PROJECT_NAME}-${{ runner.os }}.exe
     - if: ${{ runner.os=='Linux' }}
       name: Pack (Linux)
       run: |
         mkdir -p ${{ github.event.repository.name }}-${{ runner.os }}
         cp ./LICENSE ${{ github.event.repository.name }}-${{ runner.os }}/license.txt
         cp ./distro/Linux/readme.txt ${{ github.event.repository.name }}-${{ runner.os }}
-        cd build/src/Os251_artefacts/Release
+        cd build/src/OnsenlibSynth_artefacts/Release
         mv VST3/* ../../../../${{ github.event.repository.name }}-${{ runner.os }}
         mv LV2/* ../../../../${{ github.event.repository.name }}-${{ runner.os }}
         cd ../../../..
-        cmake -E tar cvf ${{ github.event.repository.name }}-${{ runner.os }}.zip --format=zip -- ${{ github.event.repository.name }}-${{ runner.os }}
+        cmake -E tar cvf ${{ github.event.repository.name }}-${{ runner.os }}.zip --format=zip -- ${PROJECT_NAME}-${{ runner.os }}
     - if: ${{ runner.os!='macOS' }}
       name: Upload (Windows and Linux)
       uses: actions/upload-artifact@v2

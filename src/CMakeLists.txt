@@ -18,7 +18,7 @@ if(UNIX AND NOT APPLE)
     list(APPEND JUCE_FORMATS LV2)
 endif()
 
-juce_add_plugin(Os251
+juce_add_plugin(OnsenlibSynth
         # VERSION ...                                     # Set this if the plugin version is different to the project version
         # ICON_BIG ""   # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
         # ICON_SMALL "${CMAKE_SOURCE_DIR}/Assets/icon16.png "
@@ -33,14 +33,14 @@ juce_add_plugin(Os251
         # EDITOR_WANTS_KEYBOARD_FOCUS TRUE/FALSE    # Does the editor need keyboard focus?
         COPY_PLUGIN_AFTER_BUILD TRUE        # Should the plugin be installed to a default location after building?
         PLUGIN_MANUFACTURER_CODE htMi               # A four-character manufacturer id with at least one upper-case character
-        PLUGIN_CODE osSY                            # A unique four-character plugin id with at least one upper-case character
+        PLUGIN_CODE osSZ                            # A unique four-character plugin id with at least one upper-case character
         FORMATS ${JUCE_FORMATS}
         VST3_CATEGORIES "Instrument"
         AU_MAIN_TYPE "kAudioUnitType_MusicDevice"
         # AU_SANDBOX_SAFE TRUE
         # AAX_CATEGORY ""
-        LV2_URI https://github.com/utokusa/OS-251
-        LV2_SHARED_LIBRARY_NAME os251lv2
+        LV2_URI https://github.com/utokusa/OnsenlibSynth
+        LV2_SHARED_LIBRARY_NAME onsenlibsynthlv2
         # HARDENED_RUNTIME_ENABLED # macOS app settings
         # HARDENED_RUNTIME_OPTIONS
         # APP_SANDBOX_ENABLED
@@ -49,14 +49,14 @@ juce_add_plugin(Os251
         MICROPHONE_PERMISSION_ENABLED TRUE
         MICROPHONE_PERMISSION_TEXT "This application requires a permission to use an audio input device of your computer. By Default, Built-In microphone will be used."
 
-        PRODUCT_NAME "OS-251")        # The name of the final
+        PRODUCT_NAME "OnsenlibSynth")        # The name of the final
 
-target_compile_features(Os251 PUBLIC cxx_std_17)
+target_compile_features(OnsenlibSynth PUBLIC cxx_std_17)
 
 
-target_compile_definitions(Os251
+target_compile_definitions(OnsenlibSynth
         PUBLIC
-        OS251_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
+        ONSENLIBSYNTH_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
         # JUCE_WEB_BROWSER and JUCE_USE_CURL would be on by default, but you might not need them.
         JUCE_WEB_BROWSER=0  # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_plugin` call
         JUCE_USE_CURL=0     # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_plugin` call
@@ -103,15 +103,15 @@ set(BINARY_SOURCES
 if (UNIX)
     list(APPEND BINARY_SOURCES ${CMAKE_SOURCE_DIR}/assets/Recursive-Regular.ttf)
 else()
-    list(APPEND BINARY_SOURCES ${CMAKE_SOURCE_DIR}/assets/Os251Font125Percent.ttf)
+    list(APPEND BINARY_SOURCES ${CMAKE_SOURCE_DIR}/assets/OnsenlibSynthFont125Percent.ttf)
 endif()
 
-juce_add_binary_data(Os251Binaries
+juce_add_binary_data(OnsenlibSynthBinaries
     SOURCES
     ${BINARY_SOURCES}
 )
 
-target_sources(Os251 PRIVATE
+target_sources(OnsenlibSynth PRIVATE
         PluginProcessor.cpp
         PluginEditor.cpp
         dsp/Chorus.cpp
@@ -126,10 +126,10 @@ target_sources(Os251 PRIVATE
 # Add an explicit include path here so that react-juce's EcmascriptEngine can find
 # the included Duktape source. You can optionally point this elsewhere if you'd like to
 # include a custom Duktape build.
-target_include_directories(Os251 PRIVATE react_juce/)
+target_include_directories(OnsenlibSynth PRIVATE react_juce/)
 
-target_link_libraries(Os251 PUBLIC
-        Os251Binaries
+target_link_libraries(OnsenlibSynth PUBLIC
+        OnsenlibSynthBinaries
         juce::juce_audio_basics
         juce::juce_audio_devices
         juce::juce_audio_formats
@@ -148,8 +148,8 @@ target_link_libraries(Os251 PUBLIC
 
 # Avoid link error on linux + gcc
 # https://forum.juce.com/t/loading-pytorch-model-using-binarydata/39997/2
-set_target_properties(Os251Binaries PROPERTIES
+set_target_properties(OnsenlibSynthBinaries PROPERTIES
         POSITION_INDEPENDENT_CODE TRUE
         )
 
-juce_generate_juce_header(Os251)
+juce_generate_juce_header(OnsenlibSynth)

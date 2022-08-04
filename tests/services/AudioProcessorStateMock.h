@@ -18,7 +18,7 @@ class AudioProcessorStateMock : public IAudioProcessorState
 {
 public:
     AudioProcessorStateMock()
-        : state (juce::Identifier ("OS-251"))
+        : state (juce::Identifier ("OnsenlibSynth"))
     {
     }
 

@@ -12,7 +12,7 @@
 #include "services/TmpFileManager.h"
 
 //==============================================================================
-Os251AudioProcessor::Os251AudioProcessor()
+OnsenlibSynthAudioProcessor::OnsenlibSynthAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
     : AudioProcessor (BusesProperties()
 #if ! JucePlugin_IsMidiEffect
@@ -37,7 +37,7 @@ Os251AudioProcessor::Os251AudioProcessor()
           &processorState,
           juce::File::getSpecialLocation (
               juce::File::SpecialLocationType::userApplicationDataDirectory)
-              .getChildFile ("Onsen Audio/OS-251/presets")),
+              .getChildFile ("Onsen Audio/OnsenlibSynth/presets")),
       laf()
 {
     // Set audio parameters
@@ -75,7 +75,7 @@ Os251AudioProcessor::Os251AudioProcessor()
     parameters.addParameterListener (unisonOnBMI.paramId, this);
     synthEngineAdapter.changeIsUnison (onsen::OscillatorParams::convertParamValueToUnisonOn (unisonOnBMI.defaultValue));
 
-    parameters.state = juce::ValueTree (juce::Identifier ("OS-251"));
+    parameters.state = juce::ValueTree (juce::Identifier ("OnsenlibSynth"));
 
     // Preset management
     juce::ValueTree preset (juce::Identifier ("CurrentPreset"));
@@ -87,18 +87,18 @@ Os251AudioProcessor::Os251AudioProcessor()
     presetManager.loadPreset (presetManager.getDefaultPresetFile());
 }
 
-Os251AudioProcessor::~Os251AudioProcessor()
+OnsenlibSynthAudioProcessor::~OnsenlibSynthAudioProcessor()
 {
     onsen::TmpFileManager::cleanUpTmpDir (onsen::TmpFileManager::getTmpDir());
 }
 
 //==============================================================================
-const juce::String Os251AudioProcessor::getName() const
+const juce::String OnsenlibSynthAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool Os251AudioProcessor::acceptsMidi() const
+bool OnsenlibSynthAudioProcessor::acceptsMidi() const
 {
 #if JucePlugin_WantsMidiInput
     return true;
@@ -107,7 +107,7 @@ bool Os251AudioProcessor::acceptsMidi() const
 #endif
 }
 
-bool Os251AudioProcessor::producesMidi() const
+bool OnsenlibSynthAudioProcessor::producesMidi() const
 {
 #if JucePlugin_ProducesMidiOutput
     return true;
@@ -116,7 +116,7 @@ bool Os251AudioProcessor::producesMidi() const
 #endif
 }
 
-bool Os251AudioProcessor::isMidiEffect() const
+bool OnsenlibSynthAudioProcessor::isMidiEffect() const
 {
 #if JucePlugin_IsMidiEffect
     return true;
@@ -125,37 +125,37 @@ bool Os251AudioProcessor::isMidiEffect() const
 #endif
 }
 
-double Os251AudioProcessor::getTailLengthSeconds() const
+double OnsenlibSynthAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int Os251AudioProcessor::getNumPrograms()
+int OnsenlibSynthAudioProcessor::getNumPrograms()
 {
     return 1; // NB: some hosts don't cope very well if you tell them there are 0 programs,
         // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int Os251AudioProcessor::getCurrentProgram()
+int OnsenlibSynthAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void Os251AudioProcessor::setCurrentProgram (int index)
+void OnsenlibSynthAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String Os251AudioProcessor::getProgramName (int index)
+const juce::String OnsenlibSynthAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void Os251AudioProcessor::changeProgramName (int index, const juce::String& newName)
+void OnsenlibSynthAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void Os251AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void OnsenlibSynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
@@ -163,7 +163,7 @@ void Os251AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     synthParams.prepareToPlay (samplesPerBlock, sampleRate);
 }
 
-void Os251AudioProcessor::releaseResources()
+void OnsenlibSynthAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
@@ -171,7 +171,7 @@ void Os251AudioProcessor::releaseResources()
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool Os251AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool OnsenlibSynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
 #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -194,7 +194,7 @@ bool Os251AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) co
 }
 #endif
 
-void Os251AudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void OnsenlibSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     // Host information
     auto playHead = getPlayHead();
@@ -237,20 +237,20 @@ void Os251AudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::
 }
 
 //==============================================================================
-bool Os251AudioProcessor::hasEditor() const
+bool OnsenlibSynthAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* Os251AudioProcessor::createEditor()
+juce::AudioProcessorEditor* OnsenlibSynthAudioProcessor::createEditor()
 {
     // Look and feel
     juce::LookAndFeel::setDefaultLookAndFeel (&laf);
-    return new Os251AudioProcessorEditor (*this, parameters, presetManager, &synthUi);
+    return new OnsenlibSynthAudioProcessorEditor (*this, parameters, presetManager, &synthUi);
 }
 
 //==============================================================================
-void Os251AudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void OnsenlibSynthAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
@@ -261,7 +261,7 @@ void Os251AudioProcessor::getStateInformation (juce::MemoryBlock& destData)
     copyXmlToBinary (*xml, destData);
 }
 
-void Os251AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void OnsenlibSynthAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -278,7 +278,7 @@ void Os251AudioProcessor::setStateInformation (const void* data, int sizeInBytes
         }
 }
 
-void Os251AudioProcessor::parameterChanged (const juce::String& parameterID, float newValue)
+void OnsenlibSynthAudioProcessor::parameterChanged (const juce::String& parameterID, float newValue)
 {
     // TODO: Update parameters in an efficient way (Stop updating all of the parameters)
     synthParams.parameterChanged();
@@ -297,5 +297,5 @@ void Os251AudioProcessor::parameterChanged (const juce::String& parameterID, flo
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new Os251AudioProcessor();
+    return new OnsenlibSynthAudioProcessor();
 }

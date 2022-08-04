@@ -14,7 +14,7 @@
 #include <iostream>
 
 //==============================================================================
-Os251AudioProcessorEditor::Os251AudioProcessorEditor (Os251AudioProcessor& proc, juce::AudioProcessorValueTreeState&, onsen::PresetManager& _presetManager, onsen::ISynthUi* _synthUi)
+OnsenlibSynthAudioProcessorEditor::OnsenlibSynthAudioProcessorEditor (OnsenlibSynthAudioProcessor& proc, juce::AudioProcessorValueTreeState&, onsen::PresetManager& _presetManager, onsen::ISynthUi* _synthUi)
     : juce::AudioProcessorEditor (&proc),
       audioProcessor (proc),
       presetManager (_presetManager),
@@ -53,7 +53,7 @@ Os251AudioProcessorEditor::Os251AudioProcessorEditor (Os251AudioProcessor& proc,
     startTimerHz (30);
 }
 
-Os251AudioProcessorEditor::~Os251AudioProcessorEditor()
+OnsenlibSynthAudioProcessorEditor::~OnsenlibSynthAudioProcessorEditor()
 {
     for (auto& param : audioProcessor.getParameters())
     {
@@ -62,34 +62,34 @@ Os251AudioProcessorEditor::~Os251AudioProcessorEditor()
 };
 
 //==============================================================================
-void Os251AudioProcessorEditor::parameterValueChanged (int parameterIndex, float newValue)
+void OnsenlibSynthAudioProcessorEditor::parameterValueChanged (int parameterIndex, float newValue)
 {
     dirtyParamFlags[parameterIndex] = true;
 }
 
-void Os251AudioProcessorEditor::parameterGestureChanged (int, bool)
+void OnsenlibSynthAudioProcessorEditor::parameterGestureChanged (int, bool)
 {
 }
 
 //==============================================================================
-void Os251AudioProcessorEditor::timerCallback()
+void OnsenlibSynthAudioProcessorEditor::timerCallback()
 {
     updateUi();
 }
 
 //==============================================================================
-void Os251AudioProcessorEditor::resized()
+void OnsenlibSynthAudioProcessorEditor::resized()
 {
     appRoot.setBounds (getLocalBounds());
 }
 
-void Os251AudioProcessorEditor::paint (juce::Graphics& g)
+void OnsenlibSynthAudioProcessorEditor::paint (juce::Graphics& g)
 {
     g.fillAll (juce::Colours::transparentWhite);
 }
 
 //==============================================================================
-juce::File Os251AudioProcessorEditor::getBundle()
+juce::File OnsenlibSynthAudioProcessorEditor::getBundle()
 {
     const juce::File dir = onsen::TmpFileManager::getTmpDir();
     const juce::String jsFileName = "main.js";
@@ -104,13 +104,13 @@ juce::File Os251AudioProcessorEditor::getBundle()
     }
 
 #if JUCE_DEBUG
-    juce::File sourceDir = juce::File (OS251_SOURCE_DIR);
+    juce::File sourceDir = juce::File (ONSENLIBSYNTH_SOURCE_DIR);
     bundle = sourceDir.getChildFile ("jsui/build/js/main.js");
 #endif
     return bundle;
 }
 
-void Os251AudioProcessorEditor::setUpParameters()
+void OnsenlibSynthAudioProcessorEditor::setUpParameters()
 {
     auto& processorParams = audioProcessor.getParameters();
 
@@ -123,7 +123,7 @@ void Os251AudioProcessorEditor::setUpParameters()
         param->addListener (this);
     }
 }
-void Os251AudioProcessorEditor::updateUi()
+void OnsenlibSynthAudioProcessorEditor::updateUi()
 {
     for (int i = 0; i < dirtyParamFlags.size(); ++i)
     {
@@ -152,7 +152,7 @@ void Os251AudioProcessorEditor::updateUi()
     }
 }
 
-void Os251AudioProcessorEditor::beforeBundleEvaluated()
+void OnsenlibSynthAudioProcessorEditor::beforeBundleEvaluated()
 {
     appRoot.registerViewType (
         "ClippingIndicatorView",
@@ -207,7 +207,7 @@ void Os251AudioProcessorEditor::beforeBundleEvaluated()
         });
 }
 
-void Os251AudioProcessorEditor::afterBundleEvaluated()
+void OnsenlibSynthAudioProcessorEditor::afterBundleEvaluated()
 {
     for (auto& param : audioProcessor.getParameters())
     {

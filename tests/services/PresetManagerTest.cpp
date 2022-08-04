@@ -65,7 +65,7 @@ TEST_F (PresetManagerTest, LoadDefaultPreset)
     presetManager.loadPreset (presetManager.getDefaultPresetFile());
     auto state = processorState.copyState();
     auto stateXml = state.createXml();
-    EXPECT_TRUE (stateXml->hasTagName ("OS-251"));
+    EXPECT_TRUE (stateXml->hasTagName ("OnsenlibSynth"));
     // Check some of the preset values
     EXPECT_EQ (stateXml->getChildByAttribute ("id", "subSquareGain")->getAttributeValue (1 /*value*/), "1.0");
     EXPECT_EQ (stateXml->getChildByAttribute ("id", "attack")->getAttributeValue (1), "0.0");
@@ -81,7 +81,7 @@ TEST_F (PresetManagerTest, LoadPreset)
     EXPECT_EQ (presetManager.getCurrentPresetFile(), presetManager.getFactoryPresetDir().getChildFile ("Bass/Bass0.oapreset"));
     auto state = processorState.copyState();
     auto stateXml = state.createXml();
-    EXPECT_TRUE (stateXml->hasTagName ("OS-251"));
+    EXPECT_TRUE (stateXml->hasTagName ("OnsenlibSynth"));
     // Check a preset values
     EXPECT_EQ (stateXml->getChildByAttribute ("id", "portamento")->getAttributeValue (1 /*value*/), "0.1000000089406967");
 }
@@ -94,7 +94,7 @@ TEST_F (PresetManagerTest, LoadNonexistingPreset)
     EXPECT_EQ (presetManager.getCurrentPresetFile(), presetManager.getDefaultPresetFile());
     auto state = processorState.copyState();
     auto stateXml = state.createXml();
-    EXPECT_TRUE (stateXml->hasTagName ("OS-251"));
+    EXPECT_TRUE (stateXml->hasTagName ("OnsenlibSynth"));
     // Check a preset values just in case
     EXPECT_EQ (stateXml->getChildByAttribute ("id", "portamento")->getAttributeValue (1 /*value*/), "0.0");
 }
@@ -112,7 +112,7 @@ TEST_F (PresetManagerTest, LoadBrokenPreset)
     EXPECT_EQ (presetManager.getCurrentPresetFile(), presetManager.getDefaultPresetFile());
     auto state = processorState.copyState();
     auto stateXml = state.createXml();
-    EXPECT_TRUE (stateXml->hasTagName ("OS-251"));
+    EXPECT_TRUE (stateXml->hasTagName ("OnsenlibSynth"));
     // Check a preset values just in case
     EXPECT_EQ (stateXml->getChildByAttribute ("id", "portamento")->getAttributeValue (1 /*value*/), "0.0");
 }
@@ -130,7 +130,7 @@ TEST_F (PresetManagerTest, LoadBrokenDefaultPreset)
     EXPECT_EQ (presetManager.getCurrentPresetFile(), presetManager.getDefaultPresetFile());
     auto state = processorState.copyState();
     auto stateXml = state.createXml();
-    EXPECT_TRUE (stateXml->hasTagName ("OS-251"));
+    EXPECT_TRUE (stateXml->hasTagName ("OnsenlibSynth"));
     // Check some of the default values
     EXPECT_EQ (stateXml->getChildByAttribute ("id", "subSquareGain")->getAttributeValue (1 /*value*/), "1.0");
     EXPECT_EQ (stateXml->getChildByAttribute ("id", "attack")->getAttributeValue (1), "0.0");
@@ -153,7 +153,7 @@ TEST_F (PresetManagerTest, LoadPresetWithMissingParameter)
     EXPECT_EQ (presetManager.getCurrentPresetFile(), file);
     auto state = processorState.copyState();
     auto stateXml = state.createXml();
-    EXPECT_TRUE (stateXml->hasTagName ("OS-251"));
+    EXPECT_TRUE (stateXml->hasTagName ("OnsenlibSynth"));
     // Check one of the preset's values
     EXPECT_EQ (stateXml->getChildByAttribute ("id", "decay")->getAttributeValue (1 /*value*/), "0.3199999630451202");
     // Check unison's value which is not included in preset for version 1.1.0
@@ -174,11 +174,11 @@ TEST_F (PresetManagerTest, LoadPresetWithNonSupportedParameter)
     EXPECT_EQ (presetManager.getCurrentPresetFile(), file);
     auto state = processorState.copyState();
     auto stateXml = state.createXml();
-    EXPECT_TRUE (stateXml->hasTagName ("OS-251"));
+    EXPECT_TRUE (stateXml->hasTagName ("OnsenlibSynth"));
     // Check one of the preset's values
     EXPECT_EQ (stateXml->getChildByAttribute ("id", "decay")->getAttributeValue (1 /*value*/), "0.3199999630451202");
     // Check extra invalid parameter is not loaded
-    // "futureParam" is included in the preset file but not current version of OS-251
+    // "futureParam" is included in the preset file but not current version of OnsenlibSynth
     EXPECT_EQ (stateXml->getChildByAttribute ("id", "futureParam"), nullptr);
 }
 
@@ -195,7 +195,7 @@ TEST_F (PresetManagerTest, LoadPresetWithInvalidParameterValue)
     EXPECT_EQ (presetManager.getCurrentPresetFile(), file);
     auto state = processorState.copyState();
     auto stateXml = state.createXml();
-    EXPECT_TRUE (stateXml->hasTagName ("OS-251"));
+    EXPECT_TRUE (stateXml->hasTagName ("OnsenlibSynth"));
     // "decay" value is "100.0" in the input, so the default value should be used
     EXPECT_EQ (stateXml->getChildByAttribute ("id", "decay")->getAttributeValue (1 /*value*/), "1.0");
 }
@@ -213,7 +213,7 @@ TEST_F (PresetManagerTest, LoadPresetWithInvalidParameterValueType)
     EXPECT_EQ (presetManager.getCurrentPresetFile(), file);
     auto state = processorState.copyState();
     auto stateXml = state.createXml();
-    EXPECT_TRUE (stateXml->hasTagName ("OS-251"));
+    EXPECT_TRUE (stateXml->hasTagName ("OnsenlibSynth"));
     // "decay" value is "invalid" in the input, so the default value should be used
     EXPECT_EQ (stateXml->getChildByAttribute ("id", "decay")->getAttributeValue (1 /*value*/), "1.0");
 }
@@ -365,7 +365,7 @@ TEST_F (PresetManagerTest, CheckSavedPresetFormat)
     EXPECT_EQ (presetXml->getChildByName ("SavedByVersion")
                    ->getFirstChildElement()
                    ->getText(),
-               OS_251_PROJECT_VERSION);
+               ONSENLIB_SYNTH_PROJECT_VERSION);
 }
 
 TEST_F (PresetManagerTest, TrackPresetsUsingRescan)

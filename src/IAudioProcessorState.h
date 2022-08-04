@@ -33,7 +33,7 @@ namespace AudioProcessorStateUtil
         if (! cp.isValid() /*For most case, "invalid" means CurrentPreset doesn't exist*/)
         {
             // This block is for processor state without CurrentPreset.
-            // It happens when the state is created by older version of OS-251 (before v1.1.0).
+            // It happens when the state is created by older version of OnsenlibSynth (before v1.1.0).
             juce::ValueTree preset (juce::Identifier ("CurrentPreset"));
             preset.setProperty (juce::Identifier ("path"), relativePresetPath, nullptr);
             state.addChild (preset, 0, nullptr);

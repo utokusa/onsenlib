@@ -79,7 +79,7 @@
 															<key>GID</key>
 															<integer>0</integer>
 															<key>PATH</key>
-															<string>OS-251.component</string>
+															<string>OnsenlibSynth.component</string>
 															<key>PATH_TYPE</key>
 															<integer>1</integer>
 															<key>PERMISSIONS</key>
@@ -616,7 +616,7 @@
 															<key>GID</key>
 															<integer>0</integer>
 															<key>PATH</key>
-															<string>OS-251.vst3</string>
+															<string>OnsenlibSynth.vst3</string>
 															<key>PATH_TYPE</key>
 															<integer>1</integer>
 															<key>PERMISSIONS</key>
@@ -1260,7 +1260,7 @@
 						<key>LANGUAGE</key>
 						<string>English</string>
 						<key>VALUE</key>
-						<string>OS-251</string>
+						<string>OnsenlibSynth</string>
 					</dict>
 				</array>
 			</dict>
@@ -1445,7 +1445,7 @@
 				</dict>
 			</array>
 			<key>NAME</key>
-			<string>OS-251</string>
+			<string>OnsenlibSynth</string>
 			<key>PAYLOAD_ONLY</key>
 			<false/>
 			<key>TREAT_MISSING_PRESENTATION_DOCUMENTS_AS_WARNING</key>

@@ -1,7 +1,7 @@
 {
   "notarize": [{
-    "path": "./build/src/Os251_artefacts/Release/installer/build/signed/OS-251.pkg",
-    "bundle_id" : "onsenaudio.OS-251",
+    "path": "./build/src/OnsenlibSynth_artefacts/Release/installer/build/signed/OnsenlibSynth.pkg",
+    "bundle_id" : "onsenaudio.OnsenlibSynth",
     "staple": true
   }],
   "apple_id": {

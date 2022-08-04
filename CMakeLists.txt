@@ -5,12 +5,12 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12" CACHE STRING "Minimum OS X deployment ta
 # So create universal binaries only on CI/CD. 
 # set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Build as universal binary")
 
-PROJECT(OS_251
+PROJECT(ONSENLIB_SYNTH
         LANGUAGES CXX C
         VERSION 1.2.1
         )
 
-add_compile_definitions(OS_251_PROJECT_VERSION="${PROJECT_VERSION}")
+add_compile_definitions(ONSENLIB_SYNTH_PROJECT_VERSION="${PROJECT_VERSION}")
 
 
 # for clang-tidy(this enable to find system header files).

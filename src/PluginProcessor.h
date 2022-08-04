@@ -19,12 +19,12 @@
 //==============================================================================
 /**
 */
-class Os251AudioProcessor : public juce::AudioProcessor, juce::AudioProcessorValueTreeState::Listener
+class OnsenlibSynthAudioProcessor : public juce::AudioProcessor, juce::AudioProcessorValueTreeState::Listener
 {
 public:
     //==============================================================================
-    Os251AudioProcessor();
-    ~Os251AudioProcessor() override;
+    OnsenlibSynthAudioProcessor();
+    ~OnsenlibSynthAudioProcessor() override;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -77,5 +77,5 @@ private:
     //==============================================================================
     void parameterChanged (const juce::String& parameterID, float newValue) override;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Os251AudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OnsenlibSynthAudioProcessor)
 };
