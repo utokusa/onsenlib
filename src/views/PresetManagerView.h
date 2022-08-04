@@ -28,6 +28,7 @@ Prev, Next, Revert are normal buttons.
 #include "../services/PresetManager.h"
 #include "PresetMenuLookAndFeel.h"
 #include <JuceHeader.h>
+#include <cassert>
 #include <functional>
 #include <string>
 #include <unordered_map>
