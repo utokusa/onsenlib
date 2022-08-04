@@ -233,9 +233,9 @@ jobs:
         APPLE_DEVELOPER_ID_APPLICATION: 13A1AEE61409B53A0A1B425960E9AE3279110B8F
       run: |
         /usr/bin/codesign -s $APPLE_DEVELOPER_ID_APPLICATION -f -v --timestamp --options runtime \
-        ./build/src/OnsenlibSynth_artefacts/Release/Standalone/OnsenlibSynth.app \
-        ./build/src/OnsenlibSynth_artefacts/Release/VST3/OnsenlibSynth.vst3 \
-        ./build/src/OnsenlibSynth_artefacts/Release/AU/OnsenlibSynth.component
+        ./build/src/${PROJECT_NAME}_artefacts/Release/Standalone/${PROJECT_NAME}.app \
+        ./build/src/${PROJECT_NAME}_artefacts/Release/VST3/${PROJECT_NAME}.vst3 \
+        ./build/src/${PROJECT_NAME}_artefacts/Release/AU/${PROJECT_NAME}.component
     - if: ${{ runner.os=='macOS' }}
       name: Install Packages app to create .pkg using packagesbuild command
       run: |
@@ -248,12 +248,12 @@ jobs:
       name: Create .pkg (macOS)
       run: |
         set -x
-        mkdir ./build/src/OnsenlibSynth_artefacts/Release/installer
-        cp ./distro/macOS/OnsenlibSynth.pkgproj ./build/src/OnsenlibSynth_artefacts/Release/installer
-        cp ./LICENSE ./build/src/OnsenlibSynth_artefacts/Release/installer/license_eng.txt
-        cd ./build/src/OnsenlibSynth_artefacts/Release
-        mv ./VST3/OnsenlibSynth.vst3 ./installer
-        mv ./AU/OnsenlibSynth.component ./installer
+        mkdir ./build/src/${PROJECT_NAME}_artefacts/Release/installer
+        cp ./distro/macOS/OnsenlibSynth.pkgproj ./build/src/${PROJECT_NAME}_artefacts/Release/installer
+        cp ./LICENSE ./build/src/${PROJECT_NAME}_artefacts/Release/installer/license_eng.txt
+        cd ./build/src/${PROJECT_NAME}_artefacts/Release
+        mv ./VST3/${PROJECT_NAME}.vst3 ./installer
+        mv ./AU/${PROJECT_NAME}.component ./installer
         cd ./installer
         # Build installer
         packagesbuild OnsenlibSynth.pkgproj
@@ -262,9 +262,9 @@ jobs:
       env:
         APPLE_DEVELOPER_ID_INSTALLER: 7EE492BDFEADA885197E69D6DDE3C91A122C03F0
       run: |
-        cd ./build/src/OnsenlibSynth_artefacts/Release/installer/build
+        cd ./build/src/${PROJECT_NAME}_artefacts/Release/installer/build
         mkdir signed
-        productsign -s $APPLE_DEVELOPER_ID_INSTALLER OnsenlibSynth.pkg ./signed/OnsenlibSynth.pkg
+        productsign -s $APPLE_DEVELOPER_ID_INSTALLER ${PROJECT_NAME}.pkg ./signed/${PROJECT_NAME}.pkg
     - if: ${{ runner.os=='macOS' }}
       name: Install gon via HomeBrew for code signing and app notarization
       run: |
@@ -283,22 +283,22 @@ jobs:
     - if: ${{ runner.os=='macOS' }}
       name: Create .dmg
       run: |
-        hdiutil create OnsenlibSynth-macOS.dmg -fs HFS+ \
-        -srcfolder ./build/src/OnsenlibSynth_artefacts/Release/installer/build/signed \
-        -format UDZO -volname OnsenlibSynth
+        hdiutil create ${{ github.event.repository.name }}-${{ runner.os }}.dmg -fs HFS+ \
+        -srcfolder ./build/src/${PROJECT_NAME}_artefacts/Release/installer/build/signed \
+        -format UDZO -volname ${PROJECT_NAME}
     - if: ${{ runner.os=='Windows' }}
       name: Create Installer (Windows)
       run: |
-        # First, put files for installer to .\build\src\OnsenlibSynth_artefacts\Release\installer
-        cp .\distro\Windows\OnsenlibSynth.iss .\build\src\OnsenlibSynth_artefacts\Release
-        cd .\build\src\OnsenlibSynth_artefacts\Release
+        # First, put files for installer to .\build\src\${Env:PROJECT_NAME}_artefacts\Release\installer
+        cp .\distro\Windows\OnsenlibSynth.iss .\build\src\${Env:PROJECT_NAME}_artefacts\Release
+        cd .\build\src\${Env:PROJECT_NAME}_artefacts\Release
         mkdir .\installer
         mv .\OnsenlibSynth.iss installer
-        cp .\VST3\OnsenlibSynth.vst3\Contents\x86_64-win\OnsenlibSynth.vst3 .\installer
+        cp .\VST3\${Env:PROJECT_NAME}.vst3\Contents\x86_64-win\${Env:PROJECT_NAME}.vst3 .\installer
         cd .\installer
         iscc OnsenlibSynth.iss
         # Put installer in the project root
-        mv .\Output\OnsenlibSynth-Windows.exe ..\..\..\..\..\
+        mv .\Output\${Env:PROJECT_NAME}-${{ runner.os }}.exe ..\..\..\..\..\
     - if: ${{ runner.os=='Windows' }}
       name: Pack (Windows)
       run: |
@@ -309,7 +309,7 @@ jobs:
         mkdir -p ${{ github.event.repository.name }}-${{ runner.os }}
         cp ./LICENSE ${{ github.event.repository.name }}-${{ runner.os }}/license.txt
         cp ./distro/Linux/readme.txt ${{ github.event.repository.name }}-${{ runner.os }}
-        cd build/src/OnsenlibSynth_artefacts/Release
+        cd build/src/${PROJECT_NAME}_artefacts/Release
         mv VST3/* ../../../../${{ github.event.repository.name }}-${{ runner.os }}
         mv LV2/* ../../../../${{ github.event.repository.name }}-${{ runner.os }}
         cd ../../../..
