@@ -302,7 +302,7 @@ jobs:
     - if: ${{ runner.os=='Windows' }}
       name: Pack (Windows)
       run: |
-        cmake -E tar cvf ${{ github.event.repository.name }}-${{ runner.os }}.zip --format=zip -- ${{ github.event.repository.name }}-${{ runner.os }}.exe
+        cmake -E tar cvf ${{ github.event.repository.name }}-${{ runner.os }}.zip --format=zip -- OS-251-${{ runner.os }}.exe
     - if: ${{ runner.os=='Linux' }}
       name: Pack (Linux)
       run: |
