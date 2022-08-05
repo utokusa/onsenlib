@@ -39,8 +39,7 @@ juce_add_plugin(OnsenlibSynth
         AU_MAIN_TYPE "kAudioUnitType_MusicDevice"
         # AU_SANDBOX_SAFE TRUE
         # AAX_CATEGORY ""
-        LV2_URI https://github.com/utokusa/OnsenlibSynth
-        LV2_SHARED_LIBRARY_NAME onsenlibsynthlv2
+        LV2URI https://github.com/utokusa/OnsenlibSynth
         # HARDENED_RUNTIME_ENABLED # macOS app settings
         # HARDENED_RUNTIME_OPTIONS
         # APP_SANDBOX_ENABLED
