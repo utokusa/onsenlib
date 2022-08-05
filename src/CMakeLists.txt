@@ -118,6 +118,7 @@ target_sources(OnsenlibSynth PRIVATE
         services/PresetManager.cpp
         views/PresetManagerView.cpp
         views/ClippingIndicatorView.cpp
+        PluginEditor.cpp
         )
 
 target_link_libraries(OnsenlibSynth PUBLIC

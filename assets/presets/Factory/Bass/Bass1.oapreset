@@ -2,7 +2,7 @@
 
 <Preset>
   <Gadget>OnsenlibSynth</Gadget>
-  <SavedByVersion>1.2.0</SavedByVersion>
+  <SavedByVersion>0.0.1</SavedByVersion>
   <Version>0</Version>
   <State>
     <OnsenlibSynth>
