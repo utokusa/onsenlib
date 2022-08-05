@@ -190,7 +190,11 @@ void OnsenlibSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
     if (playHead)
     {
         // Update positionInfo which jucePositionInfo has its pointer
-        playHead->getCurrentPosition (positionInfo);
+        auto pos = playHead->getPosition();
+        if (pos.hasValue())
+        {
+            positionInfo = pos.orFallback (positionInfo);
+        }
     }
 
     // Audio
@@ -289,14 +293,22 @@ juce::AudioProcessorValueTreeState::ParameterLayout OnsenlibSynthAudioProcessor:
 
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
-    juce::NormalisableRange<float> nrange (0.0, 1.0);
+    juce::NormalisableRange<float> nrange (0.0f, 1.0f);
 
     // Initialize parameters
     auto paramsMetaList = synthParams.getParamMetaList();
     for (auto& p : paramsMetaList)
     {
-        layout.add (std::make_unique<Parameter> (
-            p.paramId, p.paramName, "", nrange, p.defaultValue, [p] (float val) { return juce::String ((p.valueToString) (val)); }, nullptr, true));
+        layout.add (std::make_unique<juce::AudioParameterFloat> (
+            juce::ParameterID { p.paramId },
+            p.paramName,
+            nrange,
+            p.defaultValue,
+            "",
+            juce::AudioProcessorParameter::genericParameter,
+            [p] (float val, int /*maximumStringLength*/) {
+                return juce::String ((p.valueToString) (val));
+            }));
     }
 
     // ---
@@ -307,13 +319,29 @@ juce::AudioProcessorValueTreeState::ParameterLayout OnsenlibSynthAudioProcessor:
 
     // Number of voices
     auto numVoicesBMI = onsen::OscillatorParams::numVoicesParamBasicMetaInfo();
-    layout.add (std::make_unique<Parameter> (
-        numVoicesBMI.paramId, numVoicesBMI.paramName, "", nrange, numVoicesBMI.defaultValue, numVoicesBMI.valueToString, nullptr, true));
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { numVoicesBMI.paramId },
+        numVoicesBMI.paramName,
+        nrange,
+        numVoicesBMI.defaultValue,
+        "",
+        juce::AudioProcessorParameter::genericParameter,
+        [numVoicesBMI] (float val, int /*maximumStringLength*/) {
+            return juce::String ((numVoicesBMI.valueToString) (val));
+        }));
 
     // Unison On
     auto unisonOnBMI = onsen::OscillatorParams::unisonOnValueBasicMetaInfo();
-    layout.add (std::make_unique<Parameter> (
-        unisonOnBMI.paramId, unisonOnBMI.paramName, "", nrange, unisonOnBMI.defaultValue, unisonOnBMI.valueToString, nullptr, true));
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { unisonOnBMI.paramId },
+        unisonOnBMI.paramName,
+        nrange,
+        unisonOnBMI.defaultValue,
+        "",
+        juce::AudioProcessorParameter::genericParameter,
+        [unisonOnBMI] (float val, int /*maximumStringLength*/) {
+            return juce::String ((unisonOnBMI.valueToString) (val));
+        }));
 
     return layout;
 }

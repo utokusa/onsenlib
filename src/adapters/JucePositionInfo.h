@@ -17,28 +17,28 @@ namespace onsen
 //==============================================================================
 class JucePositionInfo : public IPositionInfo
 {
-    using CurrentPositionInfo = juce::AudioPlayHead::CurrentPositionInfo;
+    using PositionInfo = juce::AudioPlayHead::PositionInfo;
 
 public:
     JucePositionInfo() = delete;
-    JucePositionInfo (CurrentPositionInfo* _positionInfo) : positionInfo (_positionInfo) {}
+    JucePositionInfo (PositionInfo* _positionInfo) : positionInfo (_positionInfo) {}
 
     flnum getBpm() const override
     {
-        return positionInfo->bpm;
+        return positionInfo->getBpm().orFallback (120.0);
     }
 
     bool isPlaying() const override
     {
-        return positionInfo->isPlaying;
+        return positionInfo->getIsPlaying();
     }
 
     flnum getPpqPosition() const override
     {
-        return positionInfo->ppqPosition;
+        return positionInfo->getPpqPosition().orFallback (0.0);
     }
 
 private:
-    CurrentPositionInfo* positionInfo;
+    PositionInfo* positionInfo;
 };
 } // namespace onsen
