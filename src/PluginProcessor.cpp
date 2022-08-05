@@ -22,8 +22,8 @@ OnsenlibSynthAudioProcessor::OnsenlibSynthAudioProcessor()
 #endif
                           ),
 #endif
-      parameters (*this, nullptr),
       synthParams(),
+      apvts (*this, nullptr, "PARAMETERS", createParameterLayout()),
       positionInfo(),
       jucePositionInfo (&positionInfo),
       lfo (synthParams.lfo(), &jucePositionInfo),
@@ -31,7 +31,7 @@ OnsenlibSynthAudioProcessor::OnsenlibSynthAudioProcessor()
       synth (&synthParams, &jucePositionInfo, &lfo, voices),
       synthEngineAdapter (synth),
       synthUi (synth),
-      processorState (parameters),
+      processorState (apvts),
       presetManager (
           &processorState,
           juce::File::getSpecialLocation (
@@ -39,18 +39,12 @@ OnsenlibSynthAudioProcessor::OnsenlibSynthAudioProcessor()
               .getChildFile ("Onsen Audio/OnsenlibSynth/presets")),
       laf()
 {
-    // Set audio parameters
-    using Parameter = juce::AudioProcessorValueTreeState::Parameter;
-    juce::NormalisableRange<float> nrange (0.0, 1.0);
-
     // Initialize parameters
     auto paramsMetaList = synthParams.getParamMetaList();
     for (auto& p : paramsMetaList)
     {
-        parameters.createAndAddParameter (std::make_unique<Parameter> (
-            p.paramId, p.paramName, "", nrange, p.defaultValue, [p] (float val) { return juce::String ((p.valueToString) (val)); }, nullptr, true));
-        *(p.valuePtr) = parameters.getRawParameterValue (p.paramId);
-        parameters.addParameterListener (p.paramId, this);
+        *(p.valuePtr) = apvts.getRawParameterValue (p.paramId);
+        apvts.addParameterListener (p.paramId, this);
     }
     synthParams.parameterChanged();
 
@@ -62,24 +56,20 @@ OnsenlibSynthAudioProcessor::OnsenlibSynthAudioProcessor()
 
     // Number of voices
     auto numVoicesBMI = onsen::OscillatorParams::numVoicesParamBasicMetaInfo();
-    parameters.createAndAddParameter (std::make_unique<Parameter> (
-        numVoicesBMI.paramId, numVoicesBMI.paramName, "", nrange, numVoicesBMI.defaultValue, numVoicesBMI.valueToString, nullptr, true));
-    parameters.addParameterListener (numVoicesBMI.paramId, this);
+    apvts.addParameterListener (numVoicesBMI.paramId, this);
     synthEngineAdapter.changeNumberOfVoices (onsen::OscillatorParams::convertParamValueToNumVoices (numVoicesBMI.defaultValue));
 
     // Unison On
     auto unisonOnBMI = onsen::OscillatorParams::unisonOnValueBasicMetaInfo();
-    parameters.createAndAddParameter (std::make_unique<Parameter> (
-        unisonOnBMI.paramId, unisonOnBMI.paramName, "", nrange, unisonOnBMI.defaultValue, unisonOnBMI.valueToString, nullptr, true));
-    parameters.addParameterListener (unisonOnBMI.paramId, this);
+    apvts.addParameterListener (unisonOnBMI.paramId, this);
     synthEngineAdapter.changeIsUnison (onsen::OscillatorParams::convertParamValueToUnisonOn (unisonOnBMI.defaultValue));
 
-    parameters.state = juce::ValueTree (juce::Identifier ("OnsenlibSynth"));
+    apvts.state = juce::ValueTree (juce::Identifier ("OnsenlibSynth"));
 
     // Preset management
     juce::ValueTree preset (juce::Identifier ("CurrentPreset"));
     preset.setProperty (juce::Identifier ("path"), "Default.oapreset", nullptr);
-    parameters.state.addChild (preset, 0, nullptr);
+    apvts.state.addChild (preset, 0, nullptr);
 
     // Try to load default preset file so that users can
     // have their own default preset.
@@ -255,7 +245,7 @@ void OnsenlibSynthAudioProcessor::getStateInformation (juce::MemoryBlock& destDa
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
 
-    auto state = parameters.copyState();
+    auto state = apvts.copyState();
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
 }
@@ -268,11 +258,11 @@ void OnsenlibSynthAudioProcessor::setStateInformation (const void* data, int siz
     std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
 
     if (xmlState.get() != nullptr)
-        if (xmlState->hasTagName (parameters.state.getType()))
+        if (xmlState->hasTagName (apvts.state.getType()))
         {
             auto newState = juce::ValueTree::fromXml (*xmlState);
             newState = onsen::PresetManager::fixProcessorState (newState);
-            parameters.replaceState (newState);
+            apvts.replaceState (newState);
             presetManager.requireToUpdatePresetNameOnUI();
         }
 }
@@ -290,6 +280,42 @@ void OnsenlibSynthAudioProcessor::parameterChanged (const juce::String& paramete
     {
         synthEngineAdapter.changeIsUnison (onsen::OscillatorParams::convertParamValueToUnisonOn (newValue));
     }
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout OnsenlibSynthAudioProcessor::createParameterLayout()
+{
+    // Set audio parameters
+    using Parameter = juce::AudioProcessorValueTreeState::Parameter;
+
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+    juce::NormalisableRange<float> nrange (0.0, 1.0);
+
+    // Initialize parameters
+    auto paramsMetaList = synthParams.getParamMetaList();
+    for (auto& p : paramsMetaList)
+    {
+        layout.add (std::make_unique<Parameter> (
+            p.paramId, p.paramName, "", nrange, p.defaultValue, [p] (float val) { return juce::String ((p.valueToString) (val)); }, nullptr, true));
+    }
+
+    // ---
+
+    // Parameters that are not kept in `synthParams`.
+    // They are changed through functions like `SynthEngineAdapter::changeNumberOfVoices()` or
+    // `SynthEngineAdapter::changeIsUnison()`.
+
+    // Number of voices
+    auto numVoicesBMI = onsen::OscillatorParams::numVoicesParamBasicMetaInfo();
+    layout.add (std::make_unique<Parameter> (
+        numVoicesBMI.paramId, numVoicesBMI.paramName, "", nrange, numVoicesBMI.defaultValue, numVoicesBMI.valueToString, nullptr, true));
+
+    // Unison On
+    auto unisonOnBMI = onsen::OscillatorParams::unisonOnValueBasicMetaInfo();
+    layout.add (std::make_unique<Parameter> (
+        unisonOnBMI.paramId, unisonOnBMI.paramName, "", nrange, unisonOnBMI.defaultValue, unisonOnBMI.valueToString, nullptr, true));
+
+    return layout;
 }
 
 //==============================================================================
