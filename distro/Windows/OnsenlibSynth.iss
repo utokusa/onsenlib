@@ -1,6 +1,6 @@
 [Setup]
 AppName=OnsenlibSynth
-AppVersion=1.2.1
+AppVersion=0.0.1
 DefaultDirName={commonpf}\Onsen Audio\OnsenlibSynth
 DefaultGroupName=OnsenlibSynth
 OutputBaseFilename=OnsenlibSynth-Windows
