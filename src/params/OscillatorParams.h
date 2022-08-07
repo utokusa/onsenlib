@@ -25,6 +25,7 @@ public:
     virtual flnum getSubSquareGain() const = 0;
     virtual flnum getNoiseGain() const = 0;
     virtual flnum getShape() const = 0;
+    virtual bool getAntiAliasOn() const = 0;
 };
 
 //==============================================================================
@@ -103,6 +104,16 @@ public:
         shape = _shape;
     }
 
+    bool getAntiAliasOn() const override
+    {
+        return antiAliasOnVal > 0.5;
+    }
+
+    void setAntiAliasPtr (std::atomic<flnum>* _antiAlias)
+    {
+        antiAliasOn = _antiAlias;
+    }
+
     void parameterChanged()
     {
         sinGainVal = *sinGain;
@@ -111,6 +122,7 @@ public:
         subSquareGainVal = *subSquareGain;
         noiseGainVal = *noiseGain;
         shapeVal = *shape;
+        antiAliasOnVal = *antiAliasOn;
     }
 
     std::vector<ParamMetaInfo> getParamMetaList()
@@ -122,7 +134,8 @@ public:
             { "sawGain", "Saw", 1.0, &sawGain, [numDecimal] (float value) { return ParamUtil::valueToString (value, numDecimal); } },
             { "subSquareGain", "SubSquare", 1.0, &subSquareGain, [numDecimal] (float value) { return ParamUtil::valueToString (value, numDecimal); } },
             { "noiseGain", "Noise", 0.0, &noiseGain, [numDecimal] (float value) { return ParamUtil::valueToString (value, numDecimal); } },
-            { "shape", "Shape", 0.0, &shape, [numDecimal] (float value) { return ParamUtil::valueToString (value, numDecimal); } }
+            { "shape", "Shape", 0.0, &shape, [numDecimal] (float value) { return ParamUtil::valueToString (value, numDecimal); } },
+            { "antiAliasOn", "Anti-alias", 0.0, &antiAliasOn, ParamUtil::valueToOnOffString }
         };
     }
 
@@ -160,6 +173,7 @@ private:
     std::atomic<flnum>* subSquareGain {};
     std::atomic<flnum>* noiseGain {};
     std::atomic<flnum>* shape {};
+    std::atomic<flnum>* antiAliasOn {};
 
     flnum sinGainVal = 0.0;
     flnum squareGainVal = 0.0;
@@ -167,5 +181,6 @@ private:
     flnum subSquareGainVal = 0.0;
     flnum noiseGainVal = 0.0;
     flnum shapeVal = 0.0;
+    flnum antiAliasOnVal = 0.0;
 };
 } // namespace onsen

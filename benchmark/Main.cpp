@@ -65,6 +65,7 @@ public:
         oscillatorParams->setSubSquareGainPtr (&subSquareGain);
         oscillatorParams->setNoiseGainPtr (&noiseGain);
         oscillatorParams->setShapePtr (&shape);
+        oscillatorParams->setAntiAliasPtr (&antiAliasOn);
 
         // Envelop parameters
         onsen::EnvelopeParams* const envelopeParams = synthParams.envelope();
@@ -142,6 +143,7 @@ private:
     std::atomic<flnum> subSquareGain = { 0.5f };
     std::atomic<flnum> noiseGain = { 0.5f };
     std::atomic<flnum> shape = { 0.5f };
+    std::atomic<flnum> antiAliasOn = { 0.0f };
 
     std::atomic<flnum> attack = { 0.5f };
     std::atomic<flnum> decay = { 0.5f };

@@ -20,12 +20,14 @@ struct OscillatorParamsMock : public IOscillatorParams
         flnum sawGain,
         flnum subSquareGain,
         flnum noiseGain,
-        flnum shape) : sinGain (sinGain),
-                       squareGain (squareGain),
-                       sawGain (sawGain),
-                       subSquareGain (subSquareGain),
-                       noiseGain (noiseGain),
-                       shape (shape) {}
+        flnum shape,
+        bool antiAliasOn) : sinGain (sinGain),
+                            squareGain (squareGain),
+                            sawGain (sawGain),
+                            subSquareGain (subSquareGain),
+                            noiseGain (noiseGain),
+                            shape (shape),
+                            antiAliasOn (antiAliasOn) {}
 
     flnum getSinGain() const override { return sinGain; }
     flnum getSquareGain() const override { return squareGain; }
@@ -33,6 +35,7 @@ struct OscillatorParamsMock : public IOscillatorParams
     flnum getSubSquareGain() const override { return subSquareGain; }
     flnum getNoiseGain() const override { return noiseGain; }
     flnum getShape() const override { return shape; }
+    bool getAntiAliasOn() const override { return antiAliasOn; }
 
     flnum sinGain;
     flnum squareGain;
@@ -40,6 +43,7 @@ struct OscillatorParamsMock : public IOscillatorParams
     flnum subSquareGain;
     flnum noiseGain;
     flnum shape;
+    bool antiAliasOn;
 };
 
 } // namespace onsen

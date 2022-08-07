@@ -20,9 +20,9 @@ namespace onsen
 TEST (OscillatorTest, Sin)
 {
     // Only sin oscillator is used
-    OscillatorParamsMock params { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+    OscillatorParamsMock params { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, false };
     Oscillator osc (&params);
-    // Note that sin's algle is twice angleRad parameter of ocillatorVal()
+    // Note that sin's angle is twice angleRad parameter of ocillatorVal()
     EXPECT_NEAR (osc.oscillatorVal (0.0, 0.0, 0.5 * pi), 0.0, EPSILON);
     EXPECT_NEAR (osc.oscillatorVal ((pi / 2.0) / 2.0, 0.0, 0.5 * pi), 1.0, EPSILON);
     EXPECT_NEAR (osc.oscillatorVal ((pi) / 2.0, 0.0, 0.5 * pi), 0.0, EPSILON);
@@ -33,9 +33,9 @@ TEST (OscillatorTest, Sin)
 TEST (OscillatorTest, Square)
 {
     // Only square oscillator is used
-    OscillatorParamsMock params { 0.0, 1.0, 0.0, 0.0, 0.0, 0.0 };
+    OscillatorParamsMock params { 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, false };
     Oscillator osc (&params);
-    // Note that square's algle is twice angleRad parameter of ocillatorVal()
+    // Note that square's angle is twice angleRad parameter of ocillatorVal()
     EXPECT_NEAR (osc.oscillatorVal (0.0, 0.0, 0.5 * pi), 1.0, EPSILON);
     EXPECT_NEAR (osc.oscillatorVal ((pi / 2.0) / 2.0, 0.0, 0.5 * pi), 1.0, EPSILON);
     EXPECT_NEAR (osc.oscillatorVal ((pi) / 2.0, 0.0, 0.5 * pi), -1.0, EPSILON);
@@ -46,9 +46,9 @@ TEST (OscillatorTest, Square)
 TEST (OscillatorTest, Saw)
 {
     // Only saw oscillator is used
-    OscillatorParamsMock params { 0.0, 0.0, 1.0, 0.0, 0.0, 0.0 };
+    OscillatorParamsMock params { 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, false };
     Oscillator osc (&params);
-    // Note that saw's algle is twice angleRad parameter of ocillatorVal()
+    // Note that saw's angle is twice angleRad parameter of ocillatorVal()
     EXPECT_NEAR (osc.oscillatorVal (0.0, 0.0, 0.5 * pi), -1.0, EPSILON);
     EXPECT_NEAR (osc.oscillatorVal ((pi / 2.0) / 2.0, 0.0, 0.5 * pi), -0.5, EPSILON);
     EXPECT_NEAR (osc.oscillatorVal ((pi) / 2.0, 0.0, 0.5 * pi), 0.0, EPSILON);
@@ -59,7 +59,7 @@ TEST (OscillatorTest, Saw)
 TEST (OscillatorTest, SubSquare)
 {
     // Only sub square oscillator is used
-    OscillatorParamsMock params { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0 };
+    OscillatorParamsMock params { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, false };
     Oscillator osc (&params);
 
     EXPECT_NEAR (osc.oscillatorVal (0.0, 0.0, 0.5 * pi), 1.0, EPSILON);
@@ -69,10 +69,49 @@ TEST (OscillatorTest, SubSquare)
     EXPECT_NEAR (osc.oscillatorVal ((pi / 6.0), 0.0, 0.5 * pi), 1.0, EPSILON);
 }
 
+TEST (OscillatorTest, SquareAntiAlias)
+{
+    // Only square oscillator is used
+    OscillatorParamsMock params { 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, true };
+    Oscillator osc (&params);
+    // Note that square's angle is twice angleRad parameter of ocillatorVal()
+    EXPECT_NEAR (osc.oscillatorVal (0.0, 0.0, 0.5 * pi), 0.0, EPSILON);
+    EXPECT_NEAR (osc.oscillatorVal ((pi / 2.0) / 2.0, 0.0, 0.5 * pi), 0.5, EPSILON);
+    EXPECT_NEAR (osc.oscillatorVal ((pi) / 2.0, 0.0, 0.5 * pi), 0.0, EPSILON);
+    EXPECT_NEAR (osc.oscillatorVal ((pi * 3.0 / 2.0) / 2.0, 0.0, 0.5 * pi), -0.50000005960464478, EPSILON);
+    EXPECT_NEAR (osc.oscillatorVal ((pi / 6.0) / 2.0, 0.0, 0.5 * pi), 0.27777779102325439, EPSILON);
+}
+
+TEST (OscillatorTest, SawAntiAlias)
+{
+    // Only saw oscillator is used
+    OscillatorParamsMock params { 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, true };
+    Oscillator osc (&params);
+    // Note that saw's angle is twice angleRad parameter of ocillatorVal()
+    EXPECT_NEAR (osc.oscillatorVal (0.0, 0.0, 0.5 * pi), 0.0, EPSILON);
+    EXPECT_NEAR (osc.oscillatorVal ((pi / 2.0) / 2.0, 0.0, 0.5 * pi), -0.25, EPSILON);
+    EXPECT_NEAR (osc.oscillatorVal ((pi) / 2.0, 0.0, 0.5 * pi), 0.0, EPSILON);
+    EXPECT_NEAR (osc.oscillatorVal ((pi * 3.0 / 2.0) / 2.0, 0.0, 0.5 * pi), 0.24999997019767761, EPSILON);
+    EXPECT_NEAR (osc.oscillatorVal ((pi / 6.0) / 2.0, 0.0, 0.5 * pi), -0.1388888955116272, EPSILON);
+}
+
+TEST (OscillatorTest, SubSquareAntiAlias)
+{
+    // Only sub square oscillator is used
+    OscillatorParamsMock params { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, true };
+    Oscillator osc (&params);
+
+    EXPECT_NEAR (osc.oscillatorVal (0.0, 0.0, 0.5 * pi), 0.0, EPSILON);
+    EXPECT_NEAR (osc.oscillatorVal ((pi / 2.0), 0.0, 0.5 * pi), 1.0, EPSILON);
+    EXPECT_NEAR (osc.oscillatorVal ((pi), 0.0, 0.5 * pi), 0.0, EPSILON);
+    EXPECT_NEAR (osc.oscillatorVal ((pi * 3.0 / 2.0), 0.0, 0.5 * pi), -1.0, EPSILON);
+    EXPECT_NEAR (osc.oscillatorVal ((pi / 6.0), 0.0, 0.5 * pi), 0.55555558204650879, EPSILON);
+}
+
 TEST (OscillatorTest, Noise)
 {
     // Only noise oscillator is used
-    OscillatorParamsMock params { 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 };
+    OscillatorParamsMock params { 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, false };
     Oscillator osc (&params);
 
     int n = 1000;
@@ -109,7 +148,7 @@ TEST (OscillatorTest, Noise)
 TEST (OscillatorTest, ChangeShapeAndMixWaves)
 {
     // Start with shape = 0
-    OscillatorParamsMock params { 1.0, 1.0, 1.0, 1.0, 0.0, 0.0 };
+    OscillatorParamsMock params { 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, false };
     Oscillator osc (&params);
     constexpr int NUM_UPDATE = 5000;
     // Use lax epsilon because shape value is smoothed
@@ -118,7 +157,7 @@ TEST (OscillatorTest, ChangeShapeAndMixWaves)
     EXPECT_NEAR (osc.oscillatorVal ((pi / 6.0), 0.0, 0.5 * pi), 2.1993587017059326, EPSILON);
     EXPECT_NEAR (osc.oscillatorVal ((pi / 3.0), 0.0, 0.5 * pi), 2.5326919555664062, EPSILON);
     params.shape = 0.5;
-    // Wait for oscillatorVal becames stable
+    // Wait for oscillatorVal becomes stable
     for (int i = 0; i < NUM_UPDATE; i++)
     {
         osc.oscillatorVal (0, 0.0, 0.5 * pi);
@@ -126,7 +165,7 @@ TEST (OscillatorTest, ChangeShapeAndMixWaves)
     EXPECT_NEAR (osc.oscillatorVal ((pi / 6.0), 0.0, 0.5 * pi), 1.6666688919067383, LAX_EPSILON);
     EXPECT_NEAR (osc.oscillatorVal ((pi / 3.0), 0.0, 0.5 * pi), 2.1997506618499756, LAX_EPSILON);
     params.shape = 1.0;
-    // Wait for oscillatorVal becames stable
+    // Wait for oscillatorVal becomes stable
     for (int i = 0; i < NUM_UPDATE; i++)
     {
         osc.oscillatorVal (0, 0.0, 0.5 * pi);

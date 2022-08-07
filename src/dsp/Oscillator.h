@@ -70,7 +70,6 @@ public:
     }
 
 private:
-    static constexpr bool ANTI_ALIAS = false;
     IOscillatorParams* const p;
     std::random_device seedGen;
     std::default_random_engine randEngine;
@@ -120,7 +119,7 @@ private:
 
     flnum squareWave (flnum angle, flnum angleInc)
     {
-        if (ANTI_ALIAS)
+        if (p->getAntiAliasOn())
         {
             flnum val = squareWaveNaive (angle);
             val += polyBlep (angle, angleInc);
@@ -135,7 +134,7 @@ private:
 
     flnum sawWave (flnum angle, flnum angleInc)
     {
-        if (ANTI_ALIAS)
+        if (p->getAntiAliasOn())
         {
             flnum val = sawWaveNaive (angle);
             val -= polyBlep (angle, angleInc);
