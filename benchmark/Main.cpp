@@ -95,6 +95,7 @@ public:
         // HPF parameters
         onsen::HpfParams* const hpfParams = synthParams.hpf();
         hpfParams->setFrequencyPtr (&hpfFreq);
+        hpfParams->setFrequencyPtr (&hpfOn);
 
         // Chorus parameters
         onsen::ChorusParams* const chorusParams = synthParams.chorus();
@@ -166,6 +167,7 @@ private:
     std::atomic<flnum> filterOn = { 1.0f };
 
     std::atomic<flnum> hpfFreq = { 0.0f };
+    std::atomic<flnum> hpfOn = { 1.0f };
 
     std::atomic<flnum> chorusOn = { 1.0f };
 

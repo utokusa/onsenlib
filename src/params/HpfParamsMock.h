@@ -14,12 +14,18 @@
 namespace onsen
 {
 //==============================================================================
-class HpfParamsMock : public IHpfParams
+struct HpfParamsMock : public IHpfParams
 {
-public:
+    bool hpfOn = true;
+
     flnum getFrequency() const override
     {
         return 300.0;
+    }
+
+    bool getHpfOn() const override
+    {
+        return hpfOn;
     }
 };
 } // namespace onsen

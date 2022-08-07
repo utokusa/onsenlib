@@ -37,13 +37,28 @@ public:
           sampleRate (DEFAULT_SAMPLE_RATE),
           numChannels (_numChannels),
           filterBuffers (numChannels),
-          smoothedFreq (0.0, 0.999)
+          smoothedFreq (0.0, 0.999),
+          prevBypassed (false)
     {
         smoothedFreq.reset (p->getFrequency());
     }
 
     void render (IAudioBuffer* outputAudio, int startSample, int numSamples)
     {
+        if (p->getHpfOn())
+        {
+            if (prevBypassed)
+            {
+                resetBuffer();
+            }
+            prevBypassed = false;
+        }
+        else
+        {
+            prevBypassed = true;
+            return;
+        }
+
         // Set biquad parameter coefficients
         // https://webaudio.github.io/Audio-EQ-Cookbook/audio-eq-cookbook.html
 
@@ -103,5 +118,17 @@ private:
     // The length of this vector equals to max number of the channels;
     std::vector<FilterBuffer> filterBuffers;
     SmoothFlnum smoothedFreq;
+    bool prevBypassed;
+
+    void resetBuffer()
+    {
+        for (auto& fb : filterBuffers)
+        {
+            fb.in1 = 0.0;
+            fb.in2 = 0.0;
+            fb.out1 = 0.0;
+            fb.out2 = 0.0;
+        }
+    }
 };
 } // namespace onsen

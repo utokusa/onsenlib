@@ -20,6 +20,7 @@ class IHpfParams
 {
 public:
     virtual flnum getFrequency() const = 0;
+    virtual bool getHpfOn() const = 0;
 };
 
 //==============================================================================
@@ -37,9 +38,15 @@ public:
         frequencyVal = *frequency;
     }
 
+    bool getHpfOn() const override
+    {
+        return hpfOnVal > 0.5;
+    }
+
     void parameterChanged()
     {
         frequencyVal = *frequency;
+        hpfOnVal = *hpfOn;
     }
 
     // ---
@@ -58,12 +65,15 @@ public:
     {
         return {
             { "hpfFreq", "HPF Freq", 0.0, &frequency, [] (float value) { return ParamUtil::valueToFreqString (value, lowestFreqVal(), freqBaseNumber()); } },
+            { "hpfOn", "HPF On", 1.0, &hpfOn, ParamUtil::valueToOnOffString },
         };
     }
 
 private:
     std::atomic<flnum>* frequency {};
+    std::atomic<flnum>* hpfOn {};
 
     flnum frequencyVal = 0.0;
+    flnum hpfOnVal = 0.0;
 };
 } // namespace onsen

@@ -15,6 +15,7 @@
       <PARAM id="filterOn" value="1.0"/>
       <PARAM id="frequency" value="0.6599999666213989"/>
       <PARAM id="hpfFreq" value="0.0"/>
+      <PARAM id="hpfOn" value="1.0"/>
       <PARAM id="lfoDelay" value="0.5"/>
       <PARAM id="lfoFilterFreq" value="0.0"/>
       <PARAM id="lfoPhase" value="0.0"/>

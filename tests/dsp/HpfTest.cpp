@@ -20,7 +20,10 @@ namespace onsen
 class HpfTest : public ::testing::Test
 {
 protected:
-    // void SetUp() override {}
+    void SetUp() override
+    {
+        hpfParam.hpfOn = true;
+    }
     // void TearDown() override {}
 
     static constexpr double sampleRate = 44100;
@@ -41,6 +44,22 @@ TEST_F (HpfTest, SnapshotFor1Ch)
     EXPECT_FLOAT_EQ (audioBuffer.getSample (0, 0), 0);
     EXPECT_FLOAT_EQ (audioBuffer.getSample (0, 20), 0.18569922);
     EXPECT_FLOAT_EQ (audioBuffer.getSample (0, samplesPerBlock - 1), 0.2468688);
+}
+
+TEST_F (HpfTest, Bypass)
+{
+    const int numChannels = 1;
+    Hpf hpf { &hpfParam, numChannels };
+    hpf.setCurrentPlaybackSampleRate (sampleRate);
+    AudioBufferMock audioBuffer { numChannels, samplesPerBlock };
+    setTestInput1 (&audioBuffer);
+    hpfParam.hpfOn = false;
+    hpf.render (&audioBuffer, 0, samplesPerBlock);
+
+    // Snapshots
+    EXPECT_FLOAT_EQ (audioBuffer.getSample (0, 0), 0);
+    EXPECT_FLOAT_EQ (audioBuffer.getSample (0, 20), 0.3125);
+    EXPECT_FLOAT_EQ (audioBuffer.getSample (0, samplesPerBlock - 1), 0.984375);
 }
 
 TEST_F (HpfTest, SnapshotFor2Ch)
