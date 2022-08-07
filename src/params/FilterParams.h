@@ -22,6 +22,7 @@ public:
     virtual flnum getControlledFrequency (flnum controlVal) const = 0;
     virtual flnum getResonance() const = 0;
     virtual flnum getFilterEnvelope() const = 0;
+    virtual bool getFilterOn() const = 0;
 };
 
 //==============================================================================
@@ -67,11 +68,23 @@ public:
         filterEnvelopeVal = *filterEnvelope;
     }
 
+    bool getFilterOn() const override
+    {
+        return filterOnVal > 0.5;
+    }
+
+    void setFilterOnPtr (std::atomic<flnum>* _filterOn)
+    {
+        filterOn = _filterOn;
+        filterOnVal = *filterOn;
+    }
+
     void parameterChanged()
     {
         frequencyVal = *frequency;
         resonanceVal = *resonance;
         filterEnvelopeVal = *filterEnvelope;
+        filterOnVal = *filterOn;
     }
 
     // ---
@@ -81,15 +94,18 @@ public:
     {
         return 20.0; // [Hz]
     }
+
     static constexpr flnum freqBaseNumber()
     {
         return 1000.0;
     }
+
     // Resonance
     static constexpr flnum lowestResVal()
     {
         return 0.2;
     }
+
     static constexpr flnum resBaseNumber()
     {
         return 100.0;
@@ -101,7 +117,8 @@ public:
         return {
             { "frequency", "Frequency", 1.0, &frequency, [] (float value) { return ParamUtil::valueToFreqString (value, lowestFreqVal(), freqBaseNumber()); } },
             { "resonance", "Resonance", 0.35 /* converted to 1.0024*/, &resonance, [numDecimal] (float value) { return ParamUtil::valueToResString (value, lowestResVal(), resBaseNumber(), numDecimal); } },
-            { "filterEnv", "Env -> Filter", 0.5, &filterEnvelope, [numDecimal] (float value) { return ParamUtil::valueToString (value, numDecimal); } }
+            { "filterEnv", "Env -> Filter", 0.5, &filterEnvelope, [numDecimal] (float value) { return ParamUtil::valueToString (value, numDecimal); } },
+            { "filterOn", "Filter ON", 1.0, &filterOn, ParamUtil::valueToOnOffString }
         };
     }
 
@@ -109,9 +126,11 @@ private:
     std::atomic<flnum>* frequency {};
     std::atomic<flnum>* resonance {};
     std::atomic<flnum>* filterEnvelope {};
+    std::atomic<flnum>* filterOn {};
 
     flnum frequencyVal = 0.0;
     flnum resonanceVal = 0.0;
     flnum filterEnvelopeVal = 0.0;
+    flnum filterOnVal = 0.0;
 };
 } // namespace onsen

@@ -12,6 +12,7 @@
       <PARAM id="decay" value="0.1549999266862869"/>
       <PARAM id="envForAmpOn" value="1.0"/>
       <PARAM id="filterEnv" value="0.574999988079071"/>
+      <PARAM id="filterOn" value="1.0"/>
       <PARAM id="frequency" value="0.5999998450279236"/>
       <PARAM id="hpfFreq" value="0.0"/>
       <PARAM id="lfoDelay" value="0.5450000166893005"/>

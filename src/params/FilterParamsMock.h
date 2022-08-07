@@ -17,6 +17,8 @@ namespace onsen
 class FilterParamsMock : public IFilterParams
 {
 public:
+    FilterParamsMock (bool filterOn = true) : filterOn (filterOn) {}
+
     flnum getControlledFrequency (flnum controlVal) const override
     {
         return 100.0;
@@ -31,5 +33,18 @@ public:
     {
         return 0.5f;
     }
+
+    bool getFilterOn() const override
+    {
+        return filterOn;
+    }
+
+    void setFilterOn (bool val)
+    {
+        filterOn = val;
+    }
+
+private:
+    bool filterOn;
 };
 } // namespace onsen

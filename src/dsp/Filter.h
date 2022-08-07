@@ -37,12 +37,27 @@ public:
           lfo (_lfo),
           sampleRate (DEFAULT_SAMPLE_RATE),
           fb(),
-          smoothedFreq (0.0, 0.995)
+          smoothedFreq (0.0, 0.995),
+          prevBypassed (false)
     {
     }
 
     flnum process (flnum sampleVal, int sampleIdx)
     {
+        if (p->getFilterOn())
+        {
+            if (prevBypassed)
+            {
+                resetBuffer();
+            }
+            prevBypassed = false;
+        }
+        else
+        {
+            prevBypassed = true;
+            return sampleVal;
+        }
+
         // Set biquad parameter coefficients
         // https://webaudio.github.io/Audio-EQ-Cookbook/audio-eq-cookbook.html
         flnum targetFreq = env->getLevel() * p->getFilterEnvelope()
@@ -95,5 +110,6 @@ private:
     // The length of this vector equals to max number of the channels;
     FilterBuffer fb;
     SmoothFlnum smoothedFreq;
+    bool prevBypassed;
 };
 } // namespace onsen

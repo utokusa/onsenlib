@@ -51,4 +51,12 @@ TEST_F (FilterTest, Snapshot)
     EXPECT_FLOAT_EQ (filter.process (0.99, 1), 0.00011064461);
     EXPECT_FLOAT_EQ (filter.process (-0.5, 2), 0.00029543752);
 }
+
+TEST_F (FilterTest, Bypass)
+{
+    filterParams.setFilterOn (false);
+    EXPECT_FLOAT_EQ (filter.process (0.3, 0), 0.3);
+    EXPECT_FLOAT_EQ (filter.process (0.99, 1), 0.99);
+    EXPECT_FLOAT_EQ (filter.process (-0.5, 2), -0.5);
+}
 } // namespace onsen

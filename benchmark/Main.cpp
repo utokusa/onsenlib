@@ -90,6 +90,7 @@ public:
         filterParams->setFrequencyPtr (&frequency);
         filterParams->setResonancePtr (&resonance);
         filterParams->setFilterEnvelopePtr (&filterEnvelope);
+        filterParams->setFilterOnPtr (&filterOn);
 
         // HPF parameters
         onsen::HpfParams* const hpfParams = synthParams.hpf();
@@ -162,6 +163,7 @@ private:
     std::atomic<flnum> frequency = { 0.5f };
     std::atomic<flnum> resonance = { 0.5f };
     std::atomic<flnum> filterEnvelope = { 0.5f };
+    std::atomic<flnum> filterOn = { 1.0f };
 
     std::atomic<flnum> hpfFreq = { 0.0f };
 
