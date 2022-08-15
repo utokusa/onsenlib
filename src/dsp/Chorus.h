@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "../synth/SynthParams.h"
 #include "DspCommon.h"
 #include "IAudioBuffer.h"
 #include <vector>
@@ -35,7 +36,7 @@ class Chorus
     private:
         flnum angleDelta() const
         {
-            return 2.0 * pi * freq / sampleRate;
+            return 2.0 * pi * p->getRate() / sampleRate;
         }
 
         static flnum sinWave (flnum angle)
@@ -45,21 +46,16 @@ class Chorus
 
     public:
         flnum currentAngle;
-        flnum freq;
+        const IChorusParams* p;
         const flnum& sampleRate;
     };
 
 public:
-    Chorus()
+    Chorus (const IChorusParams* chorusParam)
         : sampleRate (DEFAULT_SAMPLE_RATE),
-          delayTime_msec (15.0),
-          feedback (0.3),
-          maxDelayTime_msec (20.0),
+          p (chorusParam),
           writePointer (0),
-          lfo ({ 0.0, 0.5, sampleRate }),
-          depth (0.1),
-          dryLevel (1.0),
-          wetLevel (1.0),
+          lfo ({ 0.0, p, sampleRate }),
           interpolateBufferAccess (true)
     {
         prepare();
@@ -70,15 +66,10 @@ public:
 
 private:
     flnum sampleRate;
-    flnum delayTime_msec;
-    flnum feedback;
-    flnum maxDelayTime_msec;
+    const IChorusParams* p;
     std::vector<flnum> buf;
     int writePointer;
     ChorusLfo lfo;
-    flnum depth;
-    flnum dryLevel;
-    flnum wetLevel;
     bool interpolateBufferAccess;
 
     //==============================================================================
@@ -86,7 +77,9 @@ private:
 
     inline int delaySample()
     {
-        return static_cast<int> (delayTime_msec * (1.0 + depth * lfo.val()) / 1000.0 * sampleRate);
+        flnum valueZeroToOne = (1.0 + p->getDepth() * lfo.val()) / 2.0;
+        valueZeroToOne = std::clamp (static_cast<double> (valueZeroToOne), 0.0, 1.0);
+        return static_cast<int> (p->getDelayTime_msec() * valueZeroToOne / 1000.0 * sampleRate);
     }
 
     inline int readIdx()
@@ -102,7 +95,10 @@ private:
 
     inline flnum delayTimeInSec()
     {
-        return delayTime_msec * (1.0 + depth * lfo.val()) / 1000.0;
+        flnum valueZeroToOne = (1.0 + p->getDepth() * lfo.val()) / 2.0;
+        valueZeroToOne = std::clamp (static_cast<double> (valueZeroToOne), 0.0, 1.0);
+        const auto ret = p->getDelayTime_msec() * valueZeroToOne / 1000.0;
+        return ret;
     }
 
     inline int firstReadIdx (const flnum delayTimeInSample)

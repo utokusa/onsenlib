@@ -100,6 +100,11 @@ public:
         // Chorus parameters
         onsen::ChorusParams* const chorusParams = synthParams.chorus();
         chorusParams->setChorusOnPtr (&chorusOn);
+        chorusParams->setDelayTime_msecPtr (&chorusDelayTime_msec);
+        chorusParams->setFeedbackPtr (&chorusFeedback);
+        chorusParams->setDepthPtr (&chorusDepth);
+        chorusParams->setRatePtr (&chorusRate);
+        chorusParams->setDryWetPtr (&chorusDryWet);
 
         // Master parameters
         onsen::MasterParams* const masterParams = synthParams.master();
@@ -170,6 +175,11 @@ private:
     std::atomic<flnum> hpfOn = { 1.0f };
 
     std::atomic<flnum> chorusOn = { 1.0f };
+    std::atomic<flnum> chorusDelayTime_msec = { 1.0f };
+    std::atomic<flnum> chorusFeedback = { 1.0f };
+    std::atomic<flnum> chorusDepth = { 1.0f };
+    std::atomic<flnum> chorusRate = { 1.0f };
+    std::atomic<flnum> chorusDryWet = { 1.0f };
 
     std::atomic<flnum> envForAmpOn = { 1.0f };
     std::atomic<flnum> pitchBendWidth = { 0.5 };

@@ -42,7 +42,7 @@ public:
           voicesToNote (getMaxNumVoices(), INIT_NOTE_NUMBER),
           isUnderSostenutoPedal (getMaxNumVoices()),
           hpf (params->hpf(), 2),
-          chorus(),
+          chorus (params->chorus()),
           masterVolume (synthParams->master())
     {
         assert (voices.size() == voicesToNote.size());

@@ -25,7 +25,9 @@ void Chorus::render (IAudioBuffer* outputAudio, int startSample, int numSamples)
         monoInputVal /= outputAudio->getNumChannels();
 
         const flnum delayVal = getModDelayValue();
-        buf.at (writePointer) = monoInputVal + delayVal * feedback;
+        buf.at (writePointer) = monoInputVal + delayVal * p->getFeedback();
+        const flnum wetLevel = p->getDryWet();
+        const flnum dryLevel = 1.0 - wetLevel;
         flnum outputVal = monoInputVal * dryLevel + delayVal * wetLevel;
         for (auto i = outputAudio->getNumChannels(); --i >= 0;)
         {
@@ -47,7 +49,7 @@ void Chorus::setCurrentPlaybackSampleRate (double _sampleRate)
 
 void Chorus::prepare()
 {
-    const auto bufSize = static_cast<int> (sampleRate * maxDelayTime_msec / 1000.0);
+    const auto bufSize = static_cast<int> (sampleRate * p->getMaxDelayTime_msec() / 1000.0) + 32 /*margin*/;
     assert (bufSize > 0);
     buf.resize (bufSize, 0.0);
     writePointer = 0;

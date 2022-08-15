@@ -8,7 +8,12 @@
     <OnsenlibSynth>
       <PARAM id="antiAliasOn" value="0.0"/>
       <PARAM id="attack" value="0.2750000059604645"/>
+      <PARAM id="chorusDelayTime" value="0.2572428286075592"/>
+      <PARAM id="chorusDepth" value="0.6134440302848816"/>
+      <PARAM id="chorusDryWet" value="0.5"/>
+      <PARAM id="chorusFeedback" value="0.8885090947151184"/>
       <PARAM id="chorusOn" value="1.0"/>
+      <PARAM id="chorusRate" value="0.5189887285232544"/>
       <PARAM id="decay" value="0.5600000023841858"/>
       <PARAM id="envForAmpOn" value="1.0"/>
       <PARAM id="filterEnv" value="0.619999885559082"/>
