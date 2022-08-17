@@ -9,6 +9,7 @@
 #include <benchmark/benchmark.h>
 
 #include "../src/adapters/JuceAudioBuffer.h"
+#include "../src/adapters/JuceRompler.h"
 #include "../src/adapters/JuceSynthEngineAdapter.h"
 #include "../tests/dsp/util/PositionInfoMock.h"
 
@@ -49,8 +50,9 @@ class SynthEngineFixture : public benchmark::Fixture
 public:
     SynthEngineFixture() : synthParams(),
                            positionInfo(),
+                           rompler(),
                            lfo (synthParams.lfo(), &positionInfo),
-                           voices (onsen::FancySynthVoice::buildVoices (onsen::SynthEngine::getMaxNumVoices(), &synthParams, &lfo)),
+                           voices (onsen::FancySynthVoice::buildVoices (onsen::SynthEngine::getMaxNumVoices(), &synthParams, &lfo, &rompler)),
                            synth (&synthParams, &positionInfo, &lfo, voices),
                            synthEngineAdapter (synth)
     {
@@ -140,6 +142,7 @@ private:
     onsen::SynthParams synthParams;
     onsen::PositionInfoMock positionInfo;
     onsen::Lfo lfo;
+    onsen::JuceRompler rompler;
     std::vector<std::shared_ptr<onsen::ISynthVoice>> voices;
     onsen::SynthEngine synth;
     onsen::JuceSynthEngineAdapter synthEngineAdapter;

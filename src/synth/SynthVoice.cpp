@@ -7,6 +7,7 @@
 */
 
 #include "SynthVoice.h"
+#include <climits>
 
 namespace onsen
 {
@@ -17,6 +18,7 @@ void FancySynthVoice::setCurrentPlaybackSampleRate (const double newRate)
     envManager.setCurrentPlaybackSampleRate (newRate);
     filter.setCurrentPlaybackSampleRate (newRate);
     osc.setCurrentPlaybackSampleRate (newRate);
+    rompler->setCurrentPlaybackSampleRate (newRate);
     smoothedAmp.prepareToPlay (newRate);
     smoothedAngleDelta.prepareToPlay (newRate);
 }
@@ -83,6 +85,8 @@ void FancySynthVoice::renderNextBlock (IAudioBuffer* outputBuffer, int startSamp
             envManager.switchTarget (p->getEnvForAmpOn());
             flnum currentSample = osc.oscillatorVal (
                 currentAngle, lfo->getLevel (idx) * lfo->getShapeAmount(), smoothedAngleDelta.get());
+            currentSample += rompler->romplerVal (sampleIdx);
+
             flnum rawAmp = level * envManager.getLevel();
             smoothedAmp.set (rawAmp);
             smoothedAmp.update();
@@ -104,6 +108,13 @@ void FancySynthVoice::renderNextBlock (IAudioBuffer* outputBuffer, int startSamp
             {
                 currentAngle -= pi * 2.0;
             }
+
+            sampleIdx++;
+            if (sampleIdx == INT_MAX)
+            {
+                sampleIdx = 0;
+            }
+
             ++idx;
             envManager.update();
             smoothedAmp.update();
@@ -113,6 +124,7 @@ void FancySynthVoice::renderNextBlock (IAudioBuffer* outputBuffer, int startSamp
                 angleDelta = 0.0;
                 smoothedAngleDelta.reset (angleDelta);
                 osc.resetState();
+                sampleIdx = 0;
                 break;
             }
         }

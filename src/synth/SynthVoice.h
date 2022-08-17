@@ -12,6 +12,7 @@
 #include "../dsp/Filter.h"
 #include "../dsp/IAudioBuffer.h"
 #include "../dsp/Oscillator.h"
+#include "../dsp/Rompler.h"
 #include "SynthParams.h"
 #include <memory>
 
@@ -39,12 +40,13 @@ class FancySynthVoice : public ISynthVoice
 
 public:
     FancySynthVoice() = delete;
-    FancySynthVoice (SynthParams* const synthParams, Lfo* const _lfo)
+    FancySynthVoice (SynthParams* const synthParams, Lfo* const _lfo, IRompler* _rompler)
         : sampleRate (DEFAULT_SAMPLES_PER_BLOCK),
           p (synthParams->master()),
           smoothedAngleDelta (0.0, 0.0),
           smoothedAmp (0.0, 0.995),
           osc (synthParams->oscillator()),
+          rompler (_rompler),
           env ((IEnvelopeParams*) (synthParams->envelope())),
           gate(),
           envManager (&env, &gate),
@@ -56,12 +58,12 @@ public:
     {
     }
 
-    static std::vector<std::shared_ptr<ISynthVoice>> buildVoices (int maxNumVoices, SynthParams* const synthParams, Lfo* const _lfo)
+    static std::vector<std::shared_ptr<ISynthVoice>> buildVoices (int maxNumVoices, SynthParams* const synthParams, Lfo* const _lfo, IRompler* _rompler)
     {
         std::vector<std::shared_ptr<ISynthVoice>> voices (maxNumVoices);
         for (int i = 0; i < maxNumVoices; i++)
         {
-            voices[i] = std::make_shared<FancySynthVoice> (synthParams, _lfo);
+            voices[i] = std::make_shared<FancySynthVoice> (synthParams, _lfo, _rompler);
         }
         return voices;
     };
@@ -92,10 +94,12 @@ private:
     MasterParams* const p;
     // We use angle in radian
     flnum currentAngle = 0.0, angleDelta = 0.0, level = 0.0;
+    int sampleIdx = 0;
     SmoothFlnum smoothedAngleDelta;
     SmoothFlnum smoothedAmp;
     flnum pitchBend = 1.0;
     Oscillator osc;
+    IRompler* rompler;
     Envelope env;
     Gate gate;
     EnvManager envManager;

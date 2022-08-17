@@ -10,6 +10,7 @@
 
 #include "JuceAudioProcessorState.h"
 #include "adapters/JucePositionInfo.h"
+#include "adapters/JuceRompler.h"
 #include "adapters/JuceSynthEngineAdapter.h"
 #include "services/PresetManager.h"
 #include "synth/SynthUi.h"
@@ -65,6 +66,7 @@ private:
     juce::AudioProcessorValueTreeState apvts;
     juce::AudioPlayHead::PositionInfo positionInfo;
     onsen::JucePositionInfo jucePositionInfo;
+    onsen::JuceRompler rompler;
     onsen::Lfo lfo;
     std::vector<std::shared_ptr<onsen::ISynthVoice>> voices;
     onsen::SynthEngine synth;
